@@ -885,6 +885,22 @@ body.light-theme .navbar.scrolled {
     transition: filter 0.3s ease;
 }
 
+.profile-img .profile-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.profile-img .profile-image.active {
+    position: relative;
+    opacity: 1;
+}
+
 .profile-img:hover img {
     filter: grayscale(0%);
 }

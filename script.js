@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initIntersectionObserver();
     initResumeDownload();
+    initProfileImageSwitcher();
     
     // Ensure tech stats are updated after a brief delay
     setTimeout(() => {
@@ -75,6 +76,30 @@ function initResumeDownload() {
             window.open(url, '_blank');
         }
     });
+}
+
+// ===================================
+// PROFILE IMAGE SWITCHER
+// ===================================
+function initProfileImageSwitcher() {
+    const profileImages = document.querySelectorAll('.profile-image');
+    if (profileImages.length < 2) return;
+    
+    let currentIndex = 0;
+    
+    function switchImage() {
+        // Remove active class from current image
+        profileImages[currentIndex].classList.remove('active');
+        
+        // Move to next image (loop back to 0 if at end)
+        currentIndex = (currentIndex + 1) % profileImages.length;
+        
+        // Add active class to new image
+        profileImages[currentIndex].classList.add('active');
+    }
+    
+    // Switch images every 4 seconds
+    setInterval(switchImage, 4000);
 }
 
 // ===================================
