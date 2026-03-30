@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitesh Joshi | Associate Software Engineer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+    
+    <!-- Shader Background -->
+    <canvas id="shaderCanvas"></canvas>
+
+    <!-- Typing Game Modal -->
+    <div id="typingGame" class="game-modal"></div>
+
+    <!-- Loading Screen -->
+    <div id="loader" class="loader">
+        <div class="loader-content">
+            <div class="terminal-loader">
+                <span class="terminal-text">Initializing_</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette -->
+    <div id="commandPalette" class="command-palette">
+        <div class="command-input-wrapper">
+            <i class="fas fa-terminal"></i>
+            <input type="text" id="commandInput" placeholder="Type a command... (press Ctrl+K)">
+        </div>
+        <div class="command-results"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-bracket">&lt;</span>
+                <span class="logo-text">Hitesh Joshi</span>
+                <span class="logo-bracket">/&gt;</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active" data-text="Home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-text="About">About</a></li>
+                <li><a href="#experience" class="nav-link" data-text="Experience">Experience</a></li>
+                <li><a href="#projects" class="nav-link" data-text="Projects">Projects</a></li>
+                <li><a href="#skills" class="nav-link" data-text="Skills">Skills</a></li>
+                <li><a href="#certifications" class="nav-link" data-text="Achievements">Achievements</a></li>
+                <li><a href="#techstack" class="nav-link" data-text="Tech Stack">Tech Stack</a></li>
+                <li><a href="#contact" class="nav-link" data-text="Contact">Contact</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="cmd-btn" title="Command Palette (Ctrl+K)">
+                    <i class="fas fa-terminal"></i>
+                </button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+
+    <!-- Floating Navigation Dots -->
+    <div class="nav-dots">
+        <a href="#home" class="dot active" data-tooltip="Home"></a>
+        <a href="#about" class="dot" data-tooltip="About"></a>
+        <a href="#experience" class="dot" data-tooltip="Experience"></a>
+        <a href="#projects" class="dot" data-tooltip="Projects"></a>
+        <a href="#skills" class="dot" data-tooltip="Skills"></a>
+        <a href="#certifications" class="dot" data-tooltip="Achievements"></a>
+        <a href="#techstack" class="dot" data-tooltip="Tech Stack"></a>
+        <a href="#contact" class="dot" data-tooltip="Contact"></a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="three-container" id="threeScene"></div>
+        <div class="hero-content">
+            <div class="glitch-wrapper">
+                <h1 class="hero-title glitch" data-text="HITESH JOSHI">HITESH JOSHI</h1>
+            </div>
+            <div class="typing-container">
+                <h2 class="hero-subtitle">I'm a <span class="typed-text"></span><span class="cursor-blink">|</span></h2>
+            </div>
+            <p class="hero-description">Associate Software Engineer @ Altera Digital Health | MUMPS & Full Stack Developer | AI Integration Specialist</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary glass-effect">
+                    <span>View My Work</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="https://docs.google.com/document/d/13OY76JWMEgHKuxzYvFgBolZPTSkvdP5E/export?format=pdf" 
+                   id="resumeDownload" class="btn btn-secondary glass-effect" 
+                   download="Hitesh_Joshi_Resume.pdf">
+                    <span>Download Resume</span>
+                    <i class="fas fa-download"></i>
+                </a>
+                <a href="#contact" class="btn btn-secondary glass-effect">
+                    <span>Get In Touch</span>
+                    <i class="fas fa-paper-plane"></i>
+                </a>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/Hitesh-Joshi15" target="_blank" rel="noopener" class="social-icon glass-effect" data-tooltip="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/in/hitesh-joshi15" target="_blank" rel="noopener" class="social-icon glass-effect" data-tooltip="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:hiteshjoshi1503@gmail.com" class="social-icon glass-effect" data-tooltip="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="tel:+918978435384" class="social-icon glass-effect" data-tooltip="Phone">
+                    <i class="fas fa-phone"></i>
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <p>Scroll Down</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;about&gt;</span>
+                <h2 class="section-title">About Me</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="image-wrapper glass-effect">
+                        <div class="profile-img">
+                            <div class="holographic-border"></div>
+                            <img src="https://via.placeholder.com/400" alt="Profile">
+                        </div>
+                        <div class="floating-icons">
+                            <i class="fab fa-html5"></i>
+                            <i class="fab fa-css3-alt"></i>
+                            <i class="fab fa-js"></i>
+                            <i class="fab fa-react"></i>
+                            <i class="fab fa-node"></i>
+                            <i class="fab fa-python"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <div class="terminal-window glass-effect">
+                        <div class="terminal-header">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                        </div>
+                        <div class="terminal-body">
+                            <p><span class="prompt">$</span> cat about.txt</p>
+                            <p class="terminal-output">
+                                Hello! I'm a passionate developer who loves creating innovative digital experiences. 
+                                With expertise in full-stack development, I transform ideas into elegant, functional solutions.
+                            </p>
+                            <p class="terminal-output">
+                                My journey in tech has been driven by curiosity and a desire to push boundaries. 
+                                I specialize in modern web technologies and enjoy tackling complex challenges.
+                            </p>
+                            <p><span class="prompt">$</span> interests.list()</p>
+                            <ul class="terminal-list">
+                                <li><i class="fas fa-code"></i> Web Development & Design</li>
+                                <li><i class="fas fa-brain"></i> AI & Machine Learning</li>
+                                <li><i class="fas fa-cube"></i> 3D Graphics & WebGL</li>
+                                <li><i class="fas fa-rocket"></i> Performance Optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card glass-effect">
+                            <div class="stat-number" data-target="50">50</div>
+                            <div class="stat-label">Projects Completed</div>
+                        </div>
+                        <div class="stat-card glass-effect">
+                            <div class="stat-number" data-target="3">3</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        <div class="stat-card glass-effect">
+                            <div class="stat-number" data-target="32" data-suffix="">32</div>
+                            <div class="stat-label">Technologies Mastered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section with Spiral Timeline -->
+    <section id="experience" class="experience section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;experience&gt;</span>
+                <h2 class="section-title">My Journey</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="timeline-container">
+                <svg class="spiral-timeline" id="spiralTimeline" viewBox="0 0 800 1600">
+                    <defs>
+                        <linearGradient id="spiralGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00f0ff;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#aa00ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5200ff;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <!-- Main glow filter -->
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        
+                        <!-- Path for particle animation -->
+                        <path id="spiralPath" d="M 0 0" fill="none" stroke="none"/>
+                    </defs>
+                </svg>
+                <div class="timeline-events">
+                    <!-- Timeline items will be added by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;projects&gt;</span>
+                <h2 class="section-title">Featured Work</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card glass-effect" data-tilt>
+                    <div class="project-image project-carousel">
+                        <img src="images/projects/digit-recognition-1.jpg" alt="Digit Recognition 1" class="carousel-image active">
+                        <img src="images/projects/digit-recognition-2.jpg" alt="Digit Recognition 2" class="carousel-image">
+                        <img src="images/projects/digit-recognition-3.jpg" alt="Digit Recognition 3" class="carousel-image">
+                        <img src="images/projects/digit-recognition-4.jpg" alt="Digit Recognition 4" class="carousel-image">
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://github.com/Hitesh-Joshi15" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="tag">CNN</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">Machine Learning</span>
+                            <span class="tag">TensorFlow</span>
+                        </div>
+                        <h3 class="project-title">Handwritten Digit Recognition (CNN)</h3>
+                        <p class="project-description">
+                            Final year project: Machine learning model for handwritten digit classification. Implemented CNN architecture with pooling and dropout for improved accuracy. Applicable for digitizing handwritten forms and postal services data.
+                        </p>
+                    </div>
+                    <div class="holographic-border"></div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card glass-effect" data-tilt>
+                    <div class="project-image project-carousel">
+                        <img src="images/projects/dtoy-vr-1.jpg" alt="DTOY VR 1" class="carousel-image active">
+                        <img src="images/projects/dtoy-vr-2.jpg" alt="DTOY VR 2" class="carousel-image">
+                        <img src="images/projects/dtoy-vr-3.jpg" alt="DTOY VR 3" class="carousel-image">
+                        <img src="images/projects/dtoy-vr-4.jpg" alt="DTOY VR 4" class="carousel-image">
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="http://dtoy.netlify.app" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://github.com/Hitesh-Joshi15" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="tag">WebVR</span>
+                            <span class="tag">A-Frame</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">AR/VR</span>
+                        </div>
+                        <h3 class="project-title">DTOY (VR Web Application)</h3>
+                        <p class="project-description">
+                            VR-based web application for immersive educational experiences. Winner of Google DSC WOW AR/VR Track 2022. Built using WebVR, A-Frame, JavaScript, HTML, and CSS for accessible virtual reality experiences.
+                        </p>
+                    </div>
+                    <div class="holographic-border"></div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card glass-effect" data-tilt>
+                    <div class="project-image project-carousel">
+                        <img src="images/projects/virtual-meetup-1.jpg" alt="Virtual Meetup 1" class="carousel-image active">
+                        <img src="images/projects/virtual-meetup-2.jpg" alt="Virtual Meetup 2" class="carousel-image">
+                        <img src="images/projects/virtual-meetup-3.jpg" alt="Virtual Meetup 3" class="carousel-image">
+                        <img src="images/projects/virtual-meetup-4.jpg" alt="Virtual Meetup 4" class="carousel-image">
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="http://virtualmeetup.netlify.app" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://github.com/Hitesh-Joshi15" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="tag">Unity</span>
+                            <span class="tag">Unreal Engine</span>
+                            <span class="tag">Blender</span>
+                            <span class="tag">HTML/CSS</span>
+                        </div>
+                        <h3 class="project-title">Virtual Meetup (Desktop Application)</h3>
+                        <p class="project-description">
+                            Desktop-based virtual meeting platform for education and collaboration. Built using Unity, Unreal Engine, and Blender for 3D environments, with web components using HTML and CSS.
+                        </p>
+                    </div>
+                    <div class="holographic-border"></div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card glass-effect" data-tilt>
+                    <div class="project-image project-carousel">
+                        <img src="images/projects/parkspot-1.jpg" alt="ParkSpot 1" class="carousel-image active">
+                        <img src="images/projects/parkspot-2.jpg" alt="ParkSpot 2" class="carousel-image">
+                        <img src="images/projects/parkspot-3.jpg" alt="ParkSpot 3" class="carousel-image">
+                        <img src="images/projects/parkspot-4.jpg" alt="ParkSpot 4" class="carousel-image">
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="http://parkspot.netlify.app" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://github.com/Hitesh-Joshi15" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="tag">HTML</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">SQL</span>
+                            <span class="tag">PHP</span>
+                        </div>
+                        <h3 class="project-title">ParkSpot (Parking Booking System)</h3>
+                        <p class="project-description">
+                            Web application for booking parking slots online. Frontend built with HTML, CSS, JavaScript; backend powered by SQL and PHP for efficient parking management.
+                        </p>
+                    </div>
+                    <div class="holographic-border"></div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-card glass-effect" data-tilt>
+                    <div class="project-image project-carousel">
+                        <img src="images/projects/portfolio-1.jpg" alt="Portfolio 1" class="carousel-image active">
+                        <img src="images/projects/portfolio-2.jpg" alt="Portfolio 2" class="carousel-image">
+                        <img src="images/projects/portfolio-3.jpg" alt="Portfolio 3" class="carousel-image">
+                        <img src="images/projects/portfolio-4.jpg" alt="Portfolio 4" class="carousel-image">
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="#home" class="project-link" title="You're already here!"><i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://github.com/Hitesh-Joshi15" target="_blank" rel="noopener" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">Three.js</span>
+                            <span class="tag">Firebase</span>
+                        </div>
+                        <h3 class="project-title">Interactive Portfolio Website</h3>
+                        <p class="project-description">
+                            Modern, feature-rich portfolio with 3D graphics and interactive elements. Features custom particle effects, WebGL shaders, command palette (Ctrl+K), typing game, spiral timeline, and glassmorphism UI.
+                        </p>
+                    </div>
+                    <div class="holographic-border"></div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="project-card glass-effect" data-tilt>
+                    <div class="project-image project-carousel">
+                        <img src="images/projects/e-commerce-1.jpg" alt="E-Commerce 1" class="carousel-image active">
+                        <img src="images/projects/e-commerce-2.jpg" alt="E-Commerce 2" class="carousel-image">
+                        <img src="images/projects/e-commerce-3.jpg" alt="E-Commerce 3" class="carousel-image">
+                        <img src="images/projects/e-commerce-4.jpg" alt="E-Commerce 4" class="carousel-image">
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://e-commerce15.netlify.app/" target="_blank" rel="noopener" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            <a href="https://github.com/Hitesh-Joshi15" target="_blank" rel="noopener" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <h3 class="project-title">E-Commerce Website</h3>
+                        <p class="project-description">
+                            Basic e-commerce platform built with HTML, CSS, and JavaScript. Implemented product listing and UI components for online shopping experience. A learning project demonstrating frontend web development fundamentals.
+                        </p>
+                    </div>
+                    <div class="holographic-border"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;skills&gt;</span>
+                <h2 class="section-title">Core Competencies</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="skills-content">
+                <!-- Radar Chart -->
+                <div class="radar-container glass-effect">
+                    <canvas id="skillsRadar"></canvas>
+                </div>
+                
+                <!-- Skill Bubbles -->
+                <div class="skill-bubbles" id="skillBubbles" title="Click to create ripple effect">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Skill Bars - Dynamically populated from skills-data.js -->
+                <div class="skill-bars">
+                    <!-- Content generated by initSkillBars() in script.js -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications & Achievements Section -->
+    <section id="certifications" class="certifications section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;achievements&gt;</span>
+                <h2 class="section-title">Certifications & Achievements</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="certifications-content">
+                <!-- Filter Buttons -->
+                <div class="cert-filters">
+                    <button class="cert-filter-btn active" data-category="all">
+                        <i class="fas fa-th"></i> All
+                    </button>
+                    <button class="cert-filter-btn" data-category="developer">
+                        <i class="fas fa-code"></i> Certifications
+                    </button>
+                    <button class="cert-filter-btn" data-category="achievement">
+                        <i class="fas fa-trophy"></i> Achievements
+                    </button>
+                </div>
+
+                <!-- Certifications Grid -->
+                <div class="certifications-grid">
+                    <!-- Machine Learning Certification -->
+                    <div class="cert-card glass-effect" data-category="developer">
+                        <div class="cert-badge">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Machine Learning</h3>
+                            <p class="cert-issuer">Online Certification</p>
+                            <p class="cert-validity">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">TensorFlow</span>
+                                <span class="skill-tag">ML Algorithms</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1G7KszMBi_KpFCrzV879lzDnD4czJxU_q/view" target="_blank" rel="noopener" class="cert-view-btn">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                        <div class="cert-progress-ring">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke="var(--primary-color)" 
+                                    stroke-width="4" fill="transparent" r="36" cx="40" cy="40"
+                                    style="stroke-dasharray: 226.195; stroke-dashoffset: 0;"/>
+                            </svg>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Visualization Certification -->
+                    <div class="cert-card glass-effect" data-category="developer">
+                        <div class="cert-badge">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Data Visualization with Python</h3>
+                            <p class="cert-issuer">Online Certification</p>
+                            <p class="cert-validity">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">Matplotlib</span>
+                                <span class="skill-tag">Seaborn</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/14XStp4uvIlg1mF9hU-P3WMcA0DthLPm4/view" target="_blank" rel="noopener" class="cert-view-btn">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                        <div class="cert-progress-ring">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke="var(--secondary-color)" 
+                                    stroke-width="4" fill="transparent" r="36" cx="40" cy="40"
+                                    style="stroke-dasharray: 226.195; stroke-dashoffset: 0;"/>
+                            </svg>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Ethical Hacking Certification -->
+                    <div class="cert-card glass-effect" data-category="developer">
+                        <div class="cert-badge security">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Ethical Hacking & Cybersecurity</h3>
+                            <p class="cert-issuer">Online Certification</p>
+                            <p class="cert-validity">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Penetration Testing</span>
+                                <span class="skill-tag">Network Security</span>
+                                <span class="skill-tag">Cryptography</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1POA93xahe53AetG0ahd3JCLqQTucDXYM/view" target="_blank" rel="noopener" class="cert-view-btn">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                        <div class="cert-progress-ring">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke="#ff6b6b" 
+                                    stroke-width="4" fill="transparent" r="36" cx="40" cy="40"
+                                    style="stroke-dasharray: 226.195; stroke-dashoffset: 0;"/>
+                            </svg>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Problem Solving Certification -->
+                    <div class="cert-card glass-effect" data-category="developer">
+                        <div class="cert-badge">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Problem Solving with C & Python</h3>
+                            <p class="cert-issuer">Online Certification</p>
+                            <p class="cert-validity">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">C Programming</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">Algorithms</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1Pa3NWyB-4BpJiOc6dQQMtbPOS2NXmtwi/view" target="_blank" rel="noopener" class="cert-view-btn">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                        <div class="cert-progress-ring">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke="var(--accent-color)" 
+                                    stroke-width="4" fill="transparent" r="36" cx="40" cy="40"
+                                    style="stroke-dasharray: 226.195; stroke-dashoffset: 0;"/>
+                            </svg>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Game Development Certification -->
+                    <div class="cert-card glass-effect" data-category="developer">
+                        <div class="cert-badge">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Game Development</h3>
+                            <p class="cert-issuer">Online Certification</p>
+                            <p class="cert-validity">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Unity</span>
+                                <span class="skill-tag">C#</span>
+                                <span class="skill-tag">Game Design</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1ocayS_iAhCpg54xw2nWWGu4ZF_MDqvED/view" target="_blank" rel="noopener" class="cert-view-btn">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                        <div class="cert-progress-ring">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke="#9c27b0" 
+                                    stroke-width="4" fill="transparent" r="36" cx="40" cy="40"
+                                    style="stroke-dasharray: 226.195; stroke-dashoffset: 0;"/>
+                            </svg>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Science Certification -->
+                    <div class="cert-card glass-effect" data-category="developer">
+                        <div class="cert-badge">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Data Science</h3>
+                            <p class="cert-issuer">Online Certification</p>
+                            <p class="cert-validity">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">Pandas</span>
+                                <span class="skill-tag">NumPy</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1reFlJHiXwRyu7MBVOLPgwyaFAQNNKq-e/view" target="_blank" rel="noopener" class="cert-view-btn">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                        <div class="cert-progress-ring">
+                            <svg class="progress-ring" width="80" height="80">
+                                <circle class="progress-ring-circle" stroke="#4caf50" 
+                                    stroke-width="4" fill="transparent" r="36" cx="40" cy="40"
+                                    style="stroke-dasharray: 226.195; stroke-dashoffset: 0;"/>
+                            </svg>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Achievement: Pro-Coder 2nd Rank -->
+                    <div class="cert-card glass-effect achievement-card" data-category="achievement">
+                        <div class="cert-badge trophy">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>2nd Rank – Pro-Coder Coding Competition</h3>
+                            <p class="cert-issuer">Pro-Coder Competition</p>
+                            <p class="cert-description">
+                                Achieved 2nd position in competitive coding competition
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Algorithms</span>
+                                <span class="skill-tag">Data Structures</span>
+                                <span class="skill-tag">Problem Solving</span>
+                            </div>
+                        </div>
+                        <div class="achievement-badge">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                    </div>
+
+                    <!-- Achievement: Uber HackTag -->
+                    <div class="cert-card glass-effect achievement-card" data-category="achievement">
+                        <div class="cert-badge trophy">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Semifinalist – Uber HackTag</h3>
+                            <p class="cert-issuer">Uber HackTag</p>
+                            <p class="cert-description">
+                                Reached semifinals in Uber's hackathon competition
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Innovation</span>
+                                <span class="skill-tag">Team Collaboration</span>
+                                <span class="skill-tag">Full Stack</span>
+                            </div>
+                        </div>
+                        <div class="achievement-badge">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+
+                    <!-- Achievement: Google DSC WOW -->
+                    <div class="cert-card glass-effect achievement-card" data-category="achievement">
+                        <div class="cert-badge trophy">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="cert-content">
+                            <h3>Winner – AR/VR Track (Google DSC WOW)</h3>
+                            <p class="cert-issuer">Google Developer Student Clubs</p>
+                            <p class="cert-description">
+                                Won AR/VR track at Google Developer Student Clubs WOW event
+                            </p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">AR/VR</span>
+                                <span class="skill-tag">Unity</span>
+                                <span class="skill-tag">3D Graphics</span>
+                            </div>
+                        </div>
+                        <div class="achievement-badge">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Visualization Section -->
+    <section id="techstack" class="techstack section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;tech-stack&gt;</span>
+                <h2 class="section-title">Technology Ecosystem</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="techstack-content">
+                <!-- Tech Stack Layers - Dynamically populated from skills-data.js -->
+                <div class="tech-layers">
+                    <!-- Content generated by initTechStack() in script.js -->
+                </div>
+
+                <!-- Tech Stats Summary -->
+                <div class="tech-stats-summary glass-effect">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">32</span>
+                            <span class="stat-label">Technologies</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">3+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Projects Completed</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Competitive Wins</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">&lt;contact&gt;</span>
+                <h2 class="section-title">Let's Connect</h2>
+                <div class="title-decoration"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card glass-effect">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>hiteshjoshi1503@gmail.com</p>
+                    </div>
+                    <div class="contact-card glass-effect">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3>Phone</h3>
+                        <p>+91 897 843 5384</p>
+                    </div>
+                    <div class="contact-card glass-effect">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Location</h3>
+                        <p>Vadodara, Gujarat, India</p>
+                    </div>
+                    <div class="contact-card glass-effect qr-card">
+                        <div class="qr-code">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <p>Scan for vCard</p>
+                    </div>
+                </div>
+                <form class="contact-form glass-effect">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                        <span class="input-focus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                        <span class="input-focus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                        <span class="input-focus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <span class="input-focus"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span>Send Message</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <canvas class="form-particles"></canvas>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <p>Creating innovative digital experiences with passion and precision.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#skills">Skills</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#certifications">Achievements</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="footer-social">
+                        <a href="https://github.com/Hitesh-Joshi15" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+                        <a href="https://linkedin.com/in/hitesh-joshi15" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/hitesh.joshi_15/?hl=en" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/BITTUJOSHI15" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Hitesh Joshi. Rendering ideas into immersive experiences.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- Firebase SDKs (version 9 - modular) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <script src="shader-background.js"></script>
+    <script src="particles.js"></script>
+    <script src="cursor.js"></script>
+    <script src="sound-system.js"></script>
+    <script src="timeline.js"></script>
+    <script src="three-scene.js"></script>
+    <script src="highscore-manager.js"></script>
+    <script src="word-tetris.js"></script>
+    <script src="typing-game.js"></script>
+    <script src="certifications.js"></script>
+    <script src="skills-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
