@@ -1538,11 +1538,12 @@ body.light-theme .navbar.scrolled {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 350px;
 }
 
 #skillsRadar {
     max-width: 100%;
-    height: auto !important;
+    width: 100%;
 }
 
 .skill-bubbles {
@@ -1704,19 +1705,19 @@ body.light-theme .navbar.scrolled {
 /* === CONTACT SECTION === */
 .contact-content {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 4rem;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
     margin-top: 3rem;
 }
 
 .contact-info {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .contact-card {
-    padding: 2rem;
+    padding: 1.25rem;
     border-radius: 15px;
     text-align: center;
     transition: all 0.3s ease;
@@ -1728,15 +1729,15 @@ body.light-theme .navbar.scrolled {
 }
 
 .contact-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 1rem;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     background: var(--gradient-primary);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
 .contact-card h3 {
@@ -1751,6 +1752,8 @@ body.light-theme .navbar.scrolled {
 .qr-card .qr-code {
     font-size: 4rem;
     color: var(--text-secondary);
+    max-width: 220px;
+    margin: 0 auto;
 }
 
 .contact-form {
@@ -7261,6 +7264,7 @@ body.light-theme .tech-stats-summary .stat-label {
     
     .skill-bubbles {
         height: 200px;
+        overflow: hidden;
     }
     
     .skill-bubble {
@@ -7444,21 +7448,26 @@ body.light-theme .tech-stats-summary .stat-label {
     .radar-container {
         padding: 1rem;
         order: -1;
+        min-height: 300px;
+        width: 100%;
     }
     
     .timeline-card {
-        width: 200px !important;
-        font-size: 0.9rem;
+        width: calc(45vw - 20px) !important;
+        max-width: 200px !important;
+        font-size: 0.85rem;
     }
     
     .timeline-card.expanded {
         width: 95vw !important;
+        max-width: none !important;
         left: 2.5vw !important;
         transform: none !important;
+        z-index: 100;
     }
     
     .timeline-card.expanded .card-expanded {
-        max-height: 60vh; /* Shorter on mobile for better visibility */
+        max-height: 60vh;
     }
     
     .timeline-events {
@@ -7471,10 +7480,12 @@ body.light-theme .tech-stats-summary .stat-label {
     
     .spiral-timeline {
         max-width: 100%;
+        opacity: 0.3;
     }
     
     .timeline-container {
-        min-height: 1200px;
+        min-height: auto;
+        position: relative;
     }
     
     /* Certifications Responsive */

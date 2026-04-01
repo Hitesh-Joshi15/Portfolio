@@ -426,35 +426,56 @@ class SpiralTimeline3D {
         // Responsive gap: larger on desktop, smaller on mobile
         const viewportWidth = window.innerWidth;
         let gap;
-        if (viewportWidth >= 1024) {
-            gap = 60; // Desktop: more space
-        } else if (viewportWidth >= 768) {
-            gap = 40; // Tablet: medium space
-        } else {
-            gap = 20; // Mobile: compact
-        }
         
-        if (isOnLeft) {
-            // Place card to the LEFT of the spiral
-            cardX = screenNodeX - cardWidth - gap;
-            
-            // Prevent card from going off left edge
-            if (cardX < 0) {
-                cardX = 10; // Minimum padding from edge
-            }
-        } else {
-            // Place card to the RIGHT of the spiral
-            cardX = screenNodeX + gap;
-            
-            // Prevent card from going off right edge
+        if (viewportWidth < 768) {
+            // MOBILE: Stack cards in two columns beside the spiral
+            // Use narrower cards and position them tightly
             const containerWidth = containerRect.width;
-            if (cardX + cardWidth > containerWidth) {
-                cardX = containerWidth - cardWidth - 10; // Minimum padding from edge
+            const spiralCenter = containerWidth / 2;
+            
+            if (isOnLeft) {
+                // Left cards: align to left portion
+                cardX = Math.max(5, spiralCenter - cardWidth - 15);
+            } else {
+                // Right cards: align to right portion
+                cardX = Math.min(spiralCenter + 15, containerWidth - cardWidth - 5);
             }
+            
+            // Vertically: use spiral Y but ensure minimum spacing between cards
+            cardY = screenNodeY - (cardHeight / 2);
+            
+            // Ensure cards don't go above container
+            if (cardY < 5) cardY = 5;
+            
+        } else {
+            if (viewportWidth >= 1024) {
+                gap = 60; // Desktop: more space
+            } else {
+                gap = 40; // Tablet: medium space
+            }
+            
+            if (isOnLeft) {
+                // Place card to the LEFT of the spiral
+                cardX = screenNodeX - cardWidth - gap;
+                
+                // Prevent card from going off left edge
+                if (cardX < 0) {
+                    cardX = 10; // Minimum padding from edge
+                }
+            } else {
+                // Place card to the RIGHT of the spiral
+                cardX = screenNodeX + gap;
+                
+                // Prevent card from going off right edge
+                const containerWidth = containerRect.width;
+                if (cardX + cardWidth > containerWidth) {
+                    cardX = containerWidth - cardWidth - 10; // Minimum padding from edge
+                }
+            }
+            
+            // Center card vertically with node
+            cardY = screenNodeY - (cardHeight / 2);
         }
-        
-        // Center card vertically with node
-        cardY = screenNodeY - (cardHeight / 2);
         
         // Store calculated positions
         card.dataset.originalX = cardX;
@@ -495,12 +516,18 @@ class SpiralTimeline3D {
         const cardSide = card.dataset.side;
         
         // Shift spiral container based on card position
-        if (cardSide === 'left') {
-            // For left-side cards, shift spiral right to make room
-            this.container.style.transform = 'translateX(250px)';
+        // Reduce shift on mobile to prevent container going off-screen
+        const isMobile = window.innerWidth < 768;
+        const shiftAmount = isMobile ? 0 : 250;
+        
+        if (shiftAmount > 0) {
+            if (cardSide === 'left') {
+                this.container.style.transform = `translateX(${shiftAmount}px)`;
+            } else {
+                this.container.style.transform = `translateX(-${shiftAmount}px)`;
+            }
         } else {
-            // For right-side cards, shift spiral left to make room
-            this.container.style.transform = 'translateX(-250px)';
+            this.container.style.transform = 'translateX(0)';
         }
         
         // Expand card

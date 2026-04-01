@@ -514,7 +514,7 @@ function initSkillsVisualization() {
         data: data,
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             scales: {
                 r: {
                     beginAtZero: true,
