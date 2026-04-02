@@ -572,6 +572,43 @@ body.light-theme .navbar.scrolled {
     box-shadow: var(--glow-primary);
 }
 
+/* === TEXT REPEL EFFECT === */
+.text-repel-target {
+    cursor: default;
+}
+
+.repel-char {
+    display: inline-block;
+    will-change: transform;
+    transition: color 0.3s ease;
+}
+
+/* Ensure section-title gradient works on split chars */
+.section-title.text-repel-target {
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
+    -webkit-background-clip: unset;
+    background: none;
+}
+
+.section-title.text-repel-target .repel-char {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Magnetic text characters (About Me terminal) */
+.magnetic-text-target {
+    cursor: default;
+}
+
+.magnetic-char {
+    display: inline-block;
+    will-change: transform;
+    white-space: nowrap;
+}
+
 /* === HERO SECTION === */
 .hero {
     position: relative;
@@ -953,6 +990,29 @@ body.light-theme .navbar.scrolled {
     border-radius: 10px;
     margin-bottom: 2rem;
     overflow: hidden;
+}
+
+.about-text .terminal-window {
+    overflow: hidden;
+    height: auto;
+    max-height: none;
+    min-height: unset;
+}
+
+.about-text .terminal-header {
+    border-radius: 10px 10px 0 0;
+}
+
+.about-text .terminal-body {
+    overflow: visible;
+}
+
+/* Override game terminal-output styles for about section */
+.about-text .terminal-output {
+    flex: unset;
+    overflow: visible;
+    scrollbar-width: unset;
+    scrollbar-color: unset;
 }
 
 .terminal-header {
@@ -1522,6 +1582,62 @@ body.light-theme .navbar.scrolled {
 .project-description {
     color: var(--text-secondary);
     line-height: 1.6;
+}
+
+/* === PROJECT TEXT EFFECTS === */
+
+/* Scroll Reveal */
+.scroll-reveal-container {
+    overflow: hidden;
+}
+
+.reveal-unit {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.reveal-unit.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-char {
+    white-space: pre;
+}
+
+.reveal-word {
+    white-space: nowrap;
+}
+
+/* Tags reveal */
+.scroll-reveal-item {
+    opacity: 0;
+    transform: scale(0.7) translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scroll-reveal-item.revealed {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* Text Morph */
+.morph-target {
+    min-height: 1.5em;
+    position: relative;
+}
+
+.morph-char {
+    display: inline-block;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    white-space: pre;
+}
+
+.morph-char.morph-flip {
+    transform: rotateX(90deg) scale(0.8);
+    opacity: 0.3;
 }
 
 /* === SKILLS SECTION === */
