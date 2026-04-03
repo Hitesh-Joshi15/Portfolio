@@ -62,7 +62,21 @@ class CertificationFilter {
                 if (entry.isIntersecting) {
                     const circle = entry.target;
                     const progressText = circle.parentElement.nextElementSibling;
-                    const targetProgress = parseInt(progressText.textContent);
+                    const textValue = (progressText?.textContent || '').trim();
+                    let targetProgress = parseInt(textValue);
+
+                    // Support non-numeric labels like "In Progress"
+                    if (Number.isNaN(targetProgress)) {
+                        const ringContainer = circle.closest('.cert-progress-ring');
+                        if (ringContainer?.dataset?.progress) {
+                            targetProgress = parseInt(ringContainer.dataset.progress);
+                        }
+                    }
+
+                    if (Number.isNaN(targetProgress)) {
+                        observer.unobserve(circle);
+                        return;
+                    }
                     
                     // Calculate stroke dashoffset for progress
                     const radius = 36;

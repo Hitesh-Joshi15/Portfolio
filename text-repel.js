@@ -83,7 +83,7 @@ class TextRepel {
                     currentY: 0,
                     targetX: 0,
                     targetY: 0,
-                    mode: 'repel'
+                    mode: el.classList.contains('glitch') ? 'repel-hero' : 'repel'
                 });
             }
 
@@ -161,6 +161,10 @@ class TextRepel {
         const magneticStrength = 20;
         const magneticEase = 0.08;
 
+        // Hero title gets stronger repulsion due to larger text size
+        const heroRadius = 150;
+        const heroStrength = 60;
+
         for (let i = 0; i < this.chars.length; i++) {
             const char = this.chars[i];
             const rect = char.el.getBoundingClientRect();
@@ -175,8 +179,9 @@ class TextRepel {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             const isMagnetic = char.mode === 'magnetic';
-            const radius = isMagnetic ? magneticRadius : this.radius;
-            const strength = isMagnetic ? magneticStrength : this.strength;
+            const isHero = char.mode === 'repel-hero';
+            const radius = isMagnetic ? magneticRadius : (isHero ? heroRadius : this.radius);
+            const strength = isMagnetic ? magneticStrength : (isHero ? heroStrength : this.strength);
             const ease = isMagnetic ? magneticEase : this.ease;
 
             if (dist < radius) {

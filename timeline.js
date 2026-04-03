@@ -514,13 +514,12 @@ class SpiralTimeline3D {
         }
         
         const cardSide = card.dataset.side;
-        
-        // Shift spiral container based on card position
-        // Reduce shift on mobile to prevent container going off-screen
         const isMobile = window.innerWidth < 768;
-        const shiftAmount = isMobile ? 0 : 250;
         
-        if (shiftAmount > 0) {
+        // On mobile, use fixed overlay (CSS handles positioning)
+        // On desktop, shift spiral to make room
+        if (!isMobile) {
+            const shiftAmount = 250;
             if (cardSide === 'left') {
                 this.container.style.transform = `translateX(${shiftAmount}px)`;
             } else {
@@ -530,40 +529,47 @@ class SpiralTimeline3D {
             this.container.style.transform = 'translateX(0)';
         }
         
+        // Store original position for restore on collapse
+        card.dataset.expandedFromLeft = card.style.left;
+        card.dataset.expandedFromTop = card.style.top;
+        
         // Expand card
         card.classList.add('expanded');
         this.expandedCard = card;
         
-        // Adjust card position when expanded to ensure it's visible
-        const originalX = parseFloat(card.dataset.originalX);
-        const originalY = parseFloat(card.dataset.originalY);
-        
-        // Position card horizontally
-        if (cardSide === 'left') {
-            // Left cards: position them more to the left when expanded
-            card.style.left = `${originalX - 50}px`;
-        } else {
-            // Right cards stay in similar position
-            card.style.left = `${originalX}px`;
-        }
-        
-        // Prevent expanded card from overflowing into next section
-        // Wait for card to expand to get accurate height
-        setTimeout(() => {
-            const containerRect = this.container.getBoundingClientRect();
-            const cardRect = card.getBoundingClientRect();
-            const containerBottom = containerRect.bottom;
-            const cardBottom = cardRect.bottom;
+        if (isMobile) {
+            // On mobile, CSS fixed positioning handles everything
+            // Clear any inline positioning that would conflict
+            card.style.left = '';
+            card.style.top = '';
             
-            // If card overflows container, shift it up
-            if (cardBottom > containerBottom) {
-                const overflow = cardBottom - containerBottom;
-                const adjustedY = originalY - overflow - 20; // Extra 20px padding
-                card.style.top = `${Math.max(10, adjustedY)}px`; // Don't go above 10px
+            // Prevent body scroll while expanded
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Desktop: adjust position
+            const originalX = parseFloat(card.dataset.originalX);
+            const originalY = parseFloat(card.dataset.originalY);
+            
+            if (cardSide === 'left') {
+                card.style.left = `${originalX - 50}px`;
             } else {
-                card.style.top = `${originalY}px`;
+                card.style.left = `${originalX}px`;
             }
-        }, 50);
+            
+            // Prevent expanded card from overflowing container
+            setTimeout(() => {
+                const containerRect = this.container.getBoundingClientRect();
+                const cardRect = card.getBoundingClientRect();
+                
+                if (cardRect.bottom > containerRect.bottom) {
+                    const overflow = cardRect.bottom - containerRect.bottom;
+                    const adjustedY = originalY - overflow - 20;
+                    card.style.top = `${Math.max(10, adjustedY)}px`;
+                } else {
+                    card.style.top = `${originalY}px`;
+                }
+            }, 50);
+        }
         
         // Hide other cards temporarily
         document.querySelectorAll('.timeline-card').forEach(c => {
@@ -587,6 +593,9 @@ class SpiralTimeline3D {
         // Collapse card
         card.classList.remove('expanded');
         this.expandedCard = null;
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
         
         // Show all cards
         document.querySelectorAll('.timeline-card').forEach(c => {

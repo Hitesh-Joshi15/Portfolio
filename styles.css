@@ -13,8 +13,8 @@
     --bg-tertiary: #16213e;
     --text-primary: #ffffff;
     --text-secondary: #b8b8d1;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.035);
+    --glass-border: rgba(255, 255, 255, 0.08);
     
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #5200ff 100%);
@@ -57,8 +57,8 @@ body.light-theme {
     --bg-tertiary: #e8ecf1;
     --text-primary: #1a1a2e;
     --text-secondary: #4a4a6a;
-    --glass-bg: rgba(255, 255, 255, 0.8);
-    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(0, 0, 0, 0.08);
     --gradient-mesh: radial-gradient(at 0% 0%, rgba(0, 153, 255, 0.08) 0%, transparent 50%),
                       radial-gradient(at 100% 0%, rgba(102, 0, 204, 0.08) 0%, transparent 50%),
                       radial-gradient(at 100% 100%, rgba(204, 0, 204, 0.08) 0%, transparent 50%),
@@ -197,9 +197,9 @@ body.light-theme #particleCanvas {
 }
 
 body.light-theme .glass-effect {
-    background: rgba(255, 255, 255, 0.85);
+    background: var(--glass-bg);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--glass-border);
 }
 
 /* === LOADING SCREEN === */
@@ -6642,6 +6642,16 @@ body.light-theme .cmd-btn:hover {
     transform: translateX(3px);
 }
 
+.cert-view-btn.disabled {
+    opacity: 0.55;
+    pointer-events: none;
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.06);
+    transform: none;
+    box-shadow: none;
+}
+
 /* Progress Ring */
 .cert-progress-ring {
     position: absolute;
@@ -7574,16 +7584,78 @@ body.light-theme .tech-stats-summary .stat-label {
         font-size: 0.85rem;
     }
     
+    /* Compact cards on mobile: show only date + title */
+    .timeline-card .card-compact .card-type,
+    .timeline-card .card-compact .card-company,
+    .timeline-card .card-compact .card-summary {
+        display: none;
+    }
+    
+    .timeline-card .card-compact {
+        padding: 0.8rem 1rem;
+    }
+    
+    .timeline-card .card-compact .card-date {
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .timeline-card .card-compact .card-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .timeline-card .card-compact .card-expand-icon {
+        bottom: 0.6rem;
+        right: 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Expanded card: fixed fullscreen modal overlay on mobile */
     .timeline-card.expanded {
-        width: 95vw !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: auto !important;
+        transform: translateY(-50%) !important;
+        width: auto !important;
+        min-width: 0 !important;
         max-width: none !important;
-        left: 2.5vw !important;
-        transform: none !important;
-        z-index: 100;
+        max-height: calc(100vh - 20px);
+        z-index: 10000;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    
+    .timeline-card.expanded[data-side="left"] {
+        min-width: 0 !important;
     }
     
     .timeline-card.expanded .card-expanded {
-        max-height: 60vh;
+        max-height: calc(100vh - 40px);
+        padding: 3rem 1.5rem 1.5rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+    }
+    
+    .timeline-card.expanded .card-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        z-index: 10001;
+        background: rgba(128, 128, 128, 0.3);
+        backdrop-filter: blur(8px);
+        width: 32px;
+        height: 32px;
+    }
+    
+    .timeline-card.expanded .card-description-full,
+    .timeline-card.expanded .card-details li {
+        font-size: 0.9rem;
     }
     
     .timeline-events {
@@ -7596,7 +7668,6 @@ body.light-theme .tech-stats-summary .stat-label {
     
     .spiral-timeline {
         max-width: 100%;
-        opacity: 0.3;
     }
     
     .timeline-container {
@@ -7619,19 +7690,20 @@ body.light-theme .tech-stats-summary .stat-label {
     }
     
     .cert-progress-ring {
-        width: 60px;
-        height: 60px;
-        top: 1.5rem;
-        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+        top: 2.25rem;
+        right: 2.25rem;
     }
     
     .progress-ring {
-        width: 60px;
-        height: 60px;
+        width: 56px;
+        height: 56px;
+        display: block;
     }
     
     .progress-text {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     /* Tech Stack Responsive */
