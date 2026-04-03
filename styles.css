@@ -7531,7 +7531,12 @@ body.light-theme .tech-stats-summary .stat-label {
     }
     
     .glitch {
-        font-size: 3rem;
+        /* Prevent wrapping between split character spans on small screens */
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 100%;
+        line-height: 1.05;
+        font-size: clamp(2.1rem, 9vw, 3rem);
     }
     
     .hero-subtitle {
