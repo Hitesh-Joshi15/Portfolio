@@ -124,17 +124,23 @@ function initNavigation() {
     const links = document.querySelectorAll('.nav-link');
     const dots = document.querySelectorAll('.nav-dots .dot');
     
-    // Sticky navbar on scroll
+    // Consolidated scroll handler (passive for performance)
+    let scrollTicking = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+        if (!scrollTicking) {
+            scrollTicking = true;
+            requestAnimationFrame(() => {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                updateActiveNav();
+                updateScrollProgress();
+                scrollTicking = false;
+            });
         }
-        
-        updateActiveNav();
-        updateScrollProgress();
-    });
+    }, { passive: true });
     
     // Mobile menu toggle
     if (hamburger) {
@@ -188,7 +194,7 @@ function initNavigation() {
 // SCROLL EFFECTS
 // ===================================
 function initScrollEffects() {
-    window.addEventListener('scroll', updateScrollProgress);
+    // Scroll progress is now handled by the consolidated scroll handler in initNavigation
 }
 
 function updateScrollProgress() {
@@ -1233,7 +1239,7 @@ function initIntersectionObserver() {
     
     // Observe elements
     const elementsToObserve = document.querySelectorAll(
-        '.section-header, .project-card, .skill-category, .contact-card, .about-image, .terminal-window'
+        '.section-header, .project-card, .skill-category, .contact-card, .about-image, .terminal-window, .philosophy-canvas-wrapper'
     );
     
     elementsToObserve.forEach(el => observer.observe(el));

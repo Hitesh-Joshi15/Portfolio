@@ -10,6 +10,8 @@ class ParticleNetwork {
         this.particleCount = 100;
         this.connectionDistance = 150;
         this.mouse = { x: null, y: null, radius: 150 };
+        this.isVisible = true;
+        this.isLightTheme = false;
         
         this.init();
     }
@@ -19,14 +21,20 @@ class ParticleNetwork {
         window.addEventListener('resize', () => this.resize());
         
         // Track mouse for interactive particles
-        window.addEventListener('mousemove', (e) => {
+        document.addEventListener('mousemove', (e) => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;
-        });
+        }, { passive: true });
         
         window.addEventListener('mouseout', () => {
             this.mouse.x = null;
             this.mouse.y = null;
+        });
+
+        // Pause when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            this.isVisible = !document.hidden;
+            if (this.isVisible) this.animate();
         });
         
         // Create particles
@@ -58,17 +66,10 @@ class ParticleNetwork {
         this.ctx.beginPath();
         this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
         
-        // Check theme and adjust colors
-        const isLightTheme = document.body.classList.contains('light-theme');
-        
-        if (isLightTheme) {
+        if (this.isLightTheme) {
             this.ctx.fillStyle = 'rgba(0, 153, 255, 0.4)';
-            this.ctx.shadowBlur = 10;
-            this.ctx.shadowColor = 'rgba(0, 153, 255, 0.5)';
         } else {
             this.ctx.fillStyle = 'rgba(0, 240, 255, 0.5)';
-            this.ctx.shadowBlur = 15;
-            this.ctx.shadowColor = 'rgba(0, 240, 255, 0.8)';
         }
         
         this.ctx.fill();
@@ -107,8 +108,6 @@ class ParticleNetwork {
     }
     
     drawConnections() {
-        const isLightTheme = document.body.classList.contains('light-theme');
-        
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
@@ -121,7 +120,7 @@ class ParticleNetwork {
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
                     
-                    if (isLightTheme) {
+                    if (this.isLightTheme) {
                         this.ctx.strokeStyle = `rgba(0, 153, 255, ${opacity * 0.25})`;
                     } else {
                         this.ctx.strokeStyle = `rgba(0, 240, 255, ${opacity * 0.3})`;
@@ -129,13 +128,17 @@ class ParticleNetwork {
                     
                     this.ctx.lineWidth = 1;
                     this.ctx.stroke();
-                    this.ctx.shadowBlur = 0;
                 }
             }
         }
     }
     
     animate() {
+        if (!this.isVisible) return;
+        
+        // Cache theme check once per frame
+        this.isLightTheme = document.body.classList.contains('light-theme');
+        
         // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         

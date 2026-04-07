@@ -55,6 +55,13 @@ class ThreeScene {
         document.addEventListener('mousemove', (e) => {
             this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        }, { passive: true });
+
+        // Pause when tab is hidden
+        this.isVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            this.isVisible = !document.hidden;
+            if (this.isVisible) this.animate();
         });
         
         // Start animation
@@ -144,6 +151,7 @@ class ThreeScene {
     }
     
     animate() {
+        if (!this.isVisible) return;
         requestAnimationFrame(() => this.animate());
         
         // Rotate particles

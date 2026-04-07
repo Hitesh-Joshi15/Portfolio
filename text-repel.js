@@ -155,6 +155,10 @@ class TextRepel {
     }
 
     animate() {
+        if (document.hidden) {
+            this.rafId = requestAnimationFrame(() => this.animate());
+            return;
+        }
         this.rafId = requestAnimationFrame(() => this.animate());
 
         const magneticRadius = 120;

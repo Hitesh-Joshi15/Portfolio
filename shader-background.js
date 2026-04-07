@@ -15,6 +15,7 @@ class ShaderBackground {
         
         this.time = 0;
         this.mouse = { x: 0.5, y: 0.5 };
+        this.isVisible = true;
         
         this.init();
     }
@@ -27,6 +28,12 @@ class ShaderBackground {
         document.addEventListener('mousemove', (e) => {
             this.mouse.x = e.clientX / window.innerWidth;
             this.mouse.y = 1.0 - (e.clientY / window.innerHeight);
+        }, { passive: true });
+
+        // Pause when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            this.isVisible = !document.hidden;
+            if (this.isVisible) this.animate();
         });
         
         this.createShaderProgram();
@@ -155,6 +162,8 @@ class ShaderBackground {
     }
     
     animate() {
+        if (!this.isVisible) return;
+        
         this.time += 0.01;
         
         // Update uniforms

@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hitesh Joshi | Associate Software Engineer</title>
+    <title>Hitesh Joshi | Crafting Ideas into Reality</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png"> 
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png"> 
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="preload" href="styles.css" as="style">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 </head>
 <body>
     <!-- Custom Cursor -->
@@ -211,6 +215,23 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Interactive 3D Avatar + Text Reflow -->
+            <div class="philosophy-canvas-wrapper">
+                <div class="philosophy-canvas-container" id="philosophyContainer">
+                    <canvas id="avatarCanvas"></canvas>
+                    <canvas id="textFlowCanvas"></canvas>
+                    <div class="philosophy-loading" id="philosophyLoading">
+                        <div class="philosophy-loader">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Loading 3D Scene...</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="philosophy-hint">
+                    <i class="fas fa-hand-pointer"></i> Click to walk &middot; Click character to interact &middot; Double-click for a surprise
+                </p>
             </div>
         </div>
     </section>
@@ -956,29 +977,33 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Scripts - CDN libs load first (order-dependent), local scripts deferred -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     
-    <!-- Firebase SDKs (version 9 - modular) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <script defer src="firebase-config.js"></script>
     
-    <script src="shader-background.js"></script>
-    <script src="particles.js"></script>
-    <script src="cursor.js"></script>
-    <script src="sound-system.js"></script>
-    <script src="timeline.js"></script>
-    <script src="three-scene.js"></script>
-    <script src="highscore-manager.js"></script>
-    <script src="word-tetris.js"></script>
-    <script src="typing-game.js"></script>
-    <script src="certifications.js"></script>
-    <script src="skills-data.js"></script>
-    <script src="script.js"></script>
-    <script src="text-repel.js"></script>
-    <script src="project-text-effects.js"></script>
+    <script defer src="shader-background.js"></script>
+    <script defer src="particles.js"></script>
+    <script defer src="cursor.js"></script>
+    <script defer src="sound-system.js"></script>
+    <script defer src="timeline.js"></script>
+    <script defer src="three-scene.js"></script>
+    <script defer src="highscore-manager.js"></script>
+    <script defer src="word-tetris.js"></script>
+    <script defer src="typing-game.js"></script>
+    <script defer src="certifications.js"></script>
+    <script defer src="skills-data.js"></script>
+    <script defer src="script.js"></script>
+    <script defer src="text-repel.js"></script>
+    <script defer src="project-text-effects.js"></script>
+    <script type="module" src="philosophy-section.js"></script>
 </body>
 </html>
