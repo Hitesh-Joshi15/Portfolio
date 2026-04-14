@@ -865,6 +865,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add hint about cursor switching
     setTimeout(() => {
-        cursor.showNotification('Tip: Press Alt+C to change cursor style!');    
+        const showHint = () => cursor.showNotification('Tip: Press Alt+C to change cursor style!');
+        if (!document.body.classList.contains('loading-active')) {
+            showHint();
+            return;
+        }
+
+        // Wait for loader to finish before showing hint.
+        const waitId = setInterval(() => {
+            if (!document.body.classList.contains('loading-active')) {
+                clearInterval(waitId);
+                showHint();
+            }
+        }, 250);
     }, 3000);
 });    

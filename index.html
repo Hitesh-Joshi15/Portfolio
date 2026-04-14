@@ -30,15 +30,10 @@
 
     <!-- Loading Screen -->
     <div id="loader" class="loader">
-        <div class="loader-content">
-            <div class="terminal-loader">
-                <span class="terminal-text">Initializing_</span>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
-            </div>
-        </div>
+        <canvas id="loaderCanvas" class="loader-canvas"></canvas>
+        <div class="loader-skip-hint">Click to skip</div>
     </div>
+    <script src="loader-animation.js"></script>
 
     <!-- Command Palette -->
     <div id="commandPalette" class="command-palette">
