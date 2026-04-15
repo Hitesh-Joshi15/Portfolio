@@ -114,6 +114,7 @@ function initLoader() {
         setTimeout(() => {
             if (!loader.classList.contains('hidden')) {
                 loader.classList.add('hidden');
+                document.body.classList.remove('loading-active');
             }
         }, 6000);
     });
@@ -760,17 +761,19 @@ function animateBubbles() {
 // ===================================
 function initStatCounters() {
     const stats = document.querySelectorAll('.stat-card .stat-number');
+
+    const getDisplayWorkYears = () => {
+        const yearsExp = window.calculateTotalWorkExperience ? window.calculateTotalWorkExperience() : 3;
+        return Math.max(0, Math.floor(yearsExp));
+    };
     
     // Update dynamic stats
     stats.forEach(stat => {
         const label = stat.nextElementSibling;
         if (label && label.textContent.includes('Years Experience')) {
-            if (window.calculateTotalWorkExperience) {
-                const yearsExp = window.calculateTotalWorkExperience();
-                const target = Math.round(yearsExp);
-                stat.setAttribute('data-target', target);
-                stat.textContent = target; // Set initial value
-            }
+            const target = getDisplayWorkYears();
+            stat.setAttribute('data-target', target);
+            stat.textContent = target; // Set initial value
         }
         if (label && label.textContent.includes('Technologies')) {
             if (window.getAllSkills) {
@@ -1105,12 +1108,17 @@ function updateTechStats() {
         return;
     }
 
+    const getDisplayWorkYears = () => {
+        const yearsExp = window.calculateTotalWorkExperience ? window.calculateTotalWorkExperience() : 3;
+        return Math.max(0, Math.floor(yearsExp));
+    };
+
     // Count total technologies
     const allSkills = window.getAllSkills();
     const totalTechCount = allSkills.length;
     
     // Get work experience (intern + full-time, not including college)
-    const workYears = window.calculateTotalWorkExperience ? window.calculateTotalWorkExperience() : 3;
+    const workYears = getDisplayWorkYears();
     
     // Update stat numbers in tech-stats-summary section
     const statsContainer = document.querySelector('.tech-stats-summary');
@@ -1122,8 +1130,8 @@ function updateTechStats() {
             console.log('Set Technologies to:', totalTechCount);
         }
         if (statNumbers[1]) {
-            statNumbers[1].textContent = Math.floor(workYears) + '+';
-            console.log('Set Years to:', Math.floor(workYears) + '+');
+            statNumbers[1].textContent = workYears + '+';
+            console.log('Set Years to:', workYears + '+');
         }
         if (statNumbers[2]) {
             statNumbers[2].textContent = '50+';

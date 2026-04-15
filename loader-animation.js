@@ -269,23 +269,26 @@ class LoaderAnimation {
 
         const w = this.logoTextureCanvas.width;
         const h = this.logoTextureCanvas.height;
-        const palette = this.isLight
-            ? {
-                faceStart: [28, 166, 255],
-                faceMid: [78, 126, 255],
-                faceEnd: [104, 60, 238],
-                sideTop: [20, 128, 225],
-                sideMid: [40, 92, 182],
-                sideBottom: [46, 48, 142]
-            }
-            : {
-                faceStart: [24, 186, 255],
-                faceMid: [68, 132, 255],
-                faceEnd: [100, 58, 255],
-                sideTop: [16, 136, 230],
-                sideMid: [34, 95, 190],
-                sideBottom: [40, 46, 150]
-            };
+        const p = this.colors.primary;
+        const s = this.colors.secondary;
+        const mix = (a, b, t) => [
+            Math.round(a[0] * (1 - t) + b[0] * t),
+            Math.round(a[1] * (1 - t) + b[1] * t),
+            Math.round(a[2] * (1 - t) + b[2] * t)
+        ];
+        const scale = (c, f) => [
+            Math.max(0, Math.min(255, Math.round(c[0] * f))),
+            Math.max(0, Math.min(255, Math.round(c[1] * f))),
+            Math.max(0, Math.min(255, Math.round(c[2] * f)))
+        ];
+
+        // Dark theme needs stronger shift away from cyan to match reference blue-purple.
+        const faceStart = this.isLight ? mix(p, s, 0.18) : mix(p, s, 0.36);
+        const faceMid = this.isLight ? mix(p, s, 0.46) : mix(p, s, 0.60);
+        const faceEnd = this.isLight ? mix(p, s, 0.82) : mix(p, s, 0.88);
+        const sideTop = scale(faceStart, 0.82);
+        const sideMid = scale(faceMid, 0.66);
+        const sideBottom = scale(faceEnd, 0.52);
 
         const face = document.createElement('canvas');
         face.width = w;
@@ -296,9 +299,9 @@ class LoaderAnimation {
         fCtx.globalCompositeOperation = 'source-in';
         const faceGrad = fCtx.createLinearGradient(0, 0, w, h);
         // Match site title gradient tone (About Me), but darker for better contrast in loader.
-        faceGrad.addColorStop(0, `rgba(${palette.faceStart[0]}, ${palette.faceStart[1]}, ${palette.faceStart[2]}, 1)`);
-        faceGrad.addColorStop(0.52, `rgba(${palette.faceMid[0]}, ${palette.faceMid[1]}, ${palette.faceMid[2]}, 1)`);
-        faceGrad.addColorStop(1, `rgba(${palette.faceEnd[0]}, ${palette.faceEnd[1]}, ${palette.faceEnd[2]}, 1)`);
+        faceGrad.addColorStop(0, `rgba(${faceStart[0]}, ${faceStart[1]}, ${faceStart[2]}, 1)`);
+        faceGrad.addColorStop(0.52, `rgba(${faceMid[0]}, ${faceMid[1]}, ${faceMid[2]}, 1)`);
+        faceGrad.addColorStop(1, `rgba(${faceEnd[0]}, ${faceEnd[1]}, ${faceEnd[2]}, 1)`);
         fCtx.fillStyle = faceGrad;
         fCtx.fillRect(0, 0, w, h);
 
@@ -329,9 +332,9 @@ class LoaderAnimation {
         sCtx.drawImage(this.logoTextureCanvas, 0, 0);
         sCtx.globalCompositeOperation = 'source-in';
         const sideGrad = sCtx.createLinearGradient(0, 0, 0, h);
-        sideGrad.addColorStop(0, `rgba(${palette.sideTop[0]}, ${palette.sideTop[1]}, ${palette.sideTop[2]}, 0.98)`);
-        sideGrad.addColorStop(0.48, `rgba(${palette.sideMid[0]}, ${palette.sideMid[1]}, ${palette.sideMid[2]}, 0.98)`);
-        sideGrad.addColorStop(1, `rgba(${palette.sideBottom[0]}, ${palette.sideBottom[1]}, ${palette.sideBottom[2]}, 0.98)`);
+        sideGrad.addColorStop(0, `rgba(${sideTop[0]}, ${sideTop[1]}, ${sideTop[2]}, 0.98)`);
+        sideGrad.addColorStop(0.48, `rgba(${sideMid[0]}, ${sideMid[1]}, ${sideMid[2]}, 0.98)`);
+        sideGrad.addColorStop(1, `rgba(${sideBottom[0]}, ${sideBottom[1]}, ${sideBottom[2]}, 0.98)`);
         sCtx.fillStyle = sideGrad;
         sCtx.fillRect(0, 0, w, h);
 
