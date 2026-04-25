@@ -614,7 +614,7 @@ class WordTetris {
                 this.currentWord = '';
                 this.selectedBlocks = [];
                 this.updateWordDisplay();
-                if (window.soundSystem) window.soundSystem.play('success');
+                if (window.soundSystem) window.soundSystem.play('wordComplete');
             } else {
                 this.highlightedBlocks = []; // Clear highlights if word not found
                 if (window.soundSystem) window.soundSystem.play('error');

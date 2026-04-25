@@ -128,10 +128,16 @@ body.light-theme::before {
 .cursor {
     width: 10px;
     height: 10px;
-    background: var(--primary-color);
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(8, 16, 32, 0.45);
     border-radius: 50%;
-    box-shadow: var(--glow-primary);
-    mix-blend-mode: difference;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.45);
+}
+
+body.light-theme .cursor {
+    background: rgba(10, 18, 34, 0.94);
+    border-color: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 10px rgba(10, 18, 34, 0.28);
 }
 
 /* Cursor symbol styles (for emojis and text) */
@@ -165,10 +171,17 @@ body.light-theme::before {
 .cursor-follower {
     width: 40px;
     height: 40px;
-    border: 2px solid var(--primary-color);
+    border: 2px solid rgba(255, 255, 255, 0.68);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 50%;
     transition: all 0.3s ease;
-    mix-blend-mode: difference;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.16);
+}
+
+body.light-theme .cursor-follower {
+    border-color: rgba(10, 18, 34, 0.62);
+    background: rgba(10, 18, 34, 0.04);
+    box-shadow: 0 0 18px rgba(10, 18, 34, 0.12);
 }
 
 /* === PARTICLE CANVAS === */
@@ -217,7 +230,7 @@ body.light-theme .glass-effect {
     justify-content: center;
     z-index: 9999;
     transition: opacity 1s ease, visibility 1s ease;
-    cursor: pointer;
+    cursor: none;
     overflow: hidden;
 }
 
@@ -229,7 +242,7 @@ body.light-theme .glass-effect {
 
 .loader.loader-dissolving {
     opacity: 0;
-    transition: opacity 1s ease;
+    transition: opacity 1.3s ease;
 }
 
 .loader-canvas {

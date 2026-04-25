@@ -107,16 +107,22 @@ function initProfileImageSwitcher() {
 // ===================================
 function initLoader() {
     // The loader animation is handled by loader-animation.js
-    // This serves as a fallback: if the animation hasn't completed
-    // after 6 seconds (e.g. script failed to load), force-hide the loader
+    // This serves as a fallback only for initialization failure states.
+    // Do not force-hide if loader animation is running normally, because
+    // interaction-aware hold can intentionally keep the loader visible longer.
     window.addEventListener('load', () => {
         const loader = document.getElementById('loader');
         setTimeout(() => {
-            if (!loader.classList.contains('hidden')) {
+            const anim = window.loaderAnimation;
+            const animationMissing = !anim;
+            const animationNeverStarted = !!anim && !anim.started;
+            const shouldForceHide = animationMissing || animationNeverStarted;
+
+            if (!loader.classList.contains('hidden') && shouldForceHide) {
                 loader.classList.add('hidden');
                 document.body.classList.remove('loading-active');
             }
-        }, 6000);
+        }, 18000);
     });
 }
 
