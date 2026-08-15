@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+.cache/
+
+# Build outputs (if any)
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+
+# Test files (keep only if needed)
+test-dashboard.html
+diagnostic.js
+
+# Documentation (optional - can keep these)
+BUGFIX_SUMMARY.md
+GAME_SCORING_REVIEW.md
+LEADERBOARD_FIX_SUMMARY.md
+QUICK_TEST_GUIDE.md
+TEST_SUITE.md
+FIREBASE_SETUP_GUIDE.md
+FIREBASE_SETUP_GUIDE.md

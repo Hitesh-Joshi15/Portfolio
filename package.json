@@ -1,0 +1,23 @@
+{
+  "name": "futuristic-portfolio",
+  "version": "1.0.0",
+  "description": "A cutting-edge, feature-rich portfolio website with stunning visual effects and interactive elements",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000 --open=/index.html",
+    "serve": "http-server -p 3000 -o"
+  },
+  "keywords": [
+    "portfolio",
+    "three.js",
+    "interactive",
+    "3d",
+    "webgl"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}

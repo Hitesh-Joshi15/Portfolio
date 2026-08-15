@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Room | Hitesh Joshi</title>
+    <meta name="description" content="Step inside the developer's mind — an interactive 3D room. Part of Hitesh Joshi's portfolio.">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Structural sizing inline so the canvas measures correctly on first boot,
+           before the lazy world/world.css arrives. */
+        html, body { margin: 0; height: 100%; overflow: hidden; background: #0a0a0f; }
+        #world3d { display: block; position: fixed; inset: 0; background: #0a0a0f; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div id="world3d"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script type="module">
+        import { bootWorld } from './world/index.js';
+
+        const exitToSite = () => window.location.replace('./index.html');
+
+        bootWorld(document.getElementById('world3d'), { onExit: exitToSite })
+            .then((app) => { if (!app) exitToSite(); }) // boot failed (e.g. CDN blocked) — go home
+            .catch((err) => { console.error('[World] boot error:', err); exitToSite(); });
+    </script>
+    <noscript>This 3D experience needs JavaScript. <a href="./index.html">Back to the main site</a>.</noscript>
+</body>
+</html>
