@@ -3449,8 +3449,9 @@ class RegexGolf {
                 feedback.className = 'regex-feedback error';
             }
         } catch (error) {
-            feedback.innerHTML = `<div class="error">Invalid regex: ${error.message}</div>`;
             feedback.className = 'regex-feedback error';
+            feedback.innerHTML = '<div class="error"></div>';
+            feedback.firstElementChild.textContent = `Invalid regex: ${error.message}`; // message echoes the user's pattern
         }
     }
     
@@ -3520,8 +3521,9 @@ class RegexGolf {
                 if (window.soundSystem) window.soundSystem.play('error');
             }
         } catch (error) {
-            feedback.innerHTML = `<div class="error">Invalid regex: ${error.message}</div>`;
             feedback.className = 'regex-feedback error';
+            feedback.innerHTML = '<div class="error"></div>';
+            feedback.firstElementChild.textContent = `Invalid regex: ${error.message}`; // message echoes the user's pattern
         }
     }
     
@@ -4011,6 +4013,7 @@ class PathFinder {
         this.isRunning = false;
         this.score = 0;
         this.pathsFound = 0;
+        this._lastScoredMaze = null;
         this.highScoreHTML = null; // Store for start screen
         this.scoreManager = new HighScoreManager('pathFinder');
     }
@@ -4029,6 +4032,7 @@ class PathFinder {
         this.isRunning = false;
         this.score = 0;
         this.pathsFound = 0;
+        this._lastScoredMaze = null;
         this.showGame();
         this.initializeGrid();
     }
@@ -4218,6 +4222,19 @@ class PathFinder {
         this.algorithm = algo;
     }
     
+    _showNote(text) {
+        let el = document.getElementById('pathfinderNote');
+        if (!el) {
+            const info = document.querySelector('.pathfinder-info');
+            if (!info) return;
+            el = document.createElement('p');
+            el.id = 'pathfinderNote';
+            el.style.color = 'var(--primary-color)';
+            info.appendChild(el);
+        }
+        el.textContent = text;
+    }
+    
     async visualize() {
         if (this.isRunning) return;
         if (!this.startCell || !this.endCell) return;
@@ -4243,6 +4260,17 @@ class PathFinder {
         
         if (result && result.length > 0) {
             await this.animatePath(result);
+            
+            // Same maze re-runs visualize fine, but only NEW mazes score —
+            // otherwise one wall layout could be farmed forever.
+            const mazeKey = [...this.walls].sort().join('|');
+            if (mazeKey === this._lastScoredMaze) {
+                this._showNote('Same maze — redraw the walls to earn more points!');
+                this.isRunning = false;
+                return;
+            }
+            this._lastScoredMaze = mazeKey;
+            this._showNote('');
             
             // Calculate score after successful pathfinding
             const obstacles = this.walls.size;

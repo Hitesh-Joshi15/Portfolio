@@ -13,21 +13,40 @@ class HighScoreManager {
         this.variants = opts.variants || null; // e.g. mode/difficulty combos -> grouped leaderboard
     }
 
+    // Names live in shared Firestore + localStorage — strip HTML-significant
+    // chars at the boundary so no template ever renders markup from a name.
+    _sanitizeName(name) {
+        return String(name ?? '')
+            .replace(/[<>&"'`]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 30);
+    }
+
+    // Escape remote-sourced values before they hit innerHTML (leaderboards
+    // render OTHER players' data — treat all of it as hostile).
+    _esc(value) {
+        const d = document.createElement('div');
+        d.textContent = String(value ?? '');
+        return d.innerHTML;
+    }
+
     // PLAYER NAME MANAGEMENT
     getPlayerName() {
-        return localStorage.getItem(this.playerNameKey) || '';
+        return this._sanitizeName(localStorage.getItem(this.playerNameKey) || '');
     }
 
     setPlayerName(name) {
-        localStorage.setItem(this.playerNameKey, name.trim());
+        localStorage.setItem(this.playerNameKey, this._sanitizeName(name));
     }
 
     promptForName() {
         const currentName = this.getPlayerName();
-        const name = prompt(`Enter your name for the leaderboards:`, currentName || 'Anonymous');
-        if (name && name.trim()) {
-            this.setPlayerName(name.trim());
-            return name.trim();
+        const raw = prompt(`Enter your name for the leaderboards:`, currentName || 'Anonymous');
+        const name = this._sanitizeName(raw);
+        if (name) {
+            this.setPlayerName(name);
+            return name;
         }
         return currentName || 'Anonymous';
     }
@@ -40,8 +59,8 @@ class HighScoreManager {
         try {
             const parsed = JSON.parse(data);
             return {
-                score: parsed.score || 0,
-                name: parsed.name || 'You',
+                score: Number(parsed.score) || 0,
+                name: this._sanitizeName(parsed.name || 'You') || 'You',
                 date: parsed.date || 'Unknown'
             };
         } catch(e) {
@@ -56,6 +75,9 @@ class HighScoreManager {
     }
 
     saveLocalHighScore(score) {
+        score = Math.floor(Number(score));
+        if (!Number.isFinite(score) || score < 0) return false; // corrupt values must never become a record
+        score = Math.min(score, 100000); // same ceiling as the global leaderboard
         const current = this.getLocalHighScore();
         const currentScore = current ? current.score : (this.scoringMode === 'lower' ? Infinity : 0);
         
@@ -97,6 +119,15 @@ class HighScoreManager {
      * @returns {Promise<boolean>} - True if submission succeeded
      */
     async submitGlobalScore(score, variant = null) {
+        // Reject garbage before it reaches the shared leaderboard; clamp to the
+        // Firestore rules ceiling so valid runs never bounce.
+        score = Math.floor(Number(score));
+        if (!Number.isFinite(score) || score < 0) {
+            console.warn('⚠️ Invalid score — not submitted:', score);
+            return false;
+        }
+        score = Math.min(score, 100000);
+
         // Check if Firebase is initialized
         if (!window.firebaseDB) {
             console.warn('⚠️ Firebase not initialized. Score not submitted to global leaderboard.');
@@ -291,8 +322,8 @@ class HighScoreManager {
                         </div>
                         <div class="score-preview-content">
                             <div class="score-preview-label">Your Best</div>
-                            <div class="score-preview-value">${personal.score}</div>
-                            <div class="score-preview-name">${personal.name}</div>
+                            <div class="score-preview-value">${Number(personal.score) || 0}</div>
+                            <div class="score-preview-name">${this._esc(personal.name)}</div>
                         </div>
                     </div>
                 ` : ''}
@@ -303,8 +334,8 @@ class HighScoreManager {
                         </div>
                         <div class="score-preview-content">
                             <div class="score-preview-label">World Record</div>
-                            <div class="score-preview-value">${global.score}</div>
-                            <div class="score-preview-name">${global.name}</div>
+                            <div class="score-preview-value">${Number(global.score) || 0}</div>
+                            <div class="score-preview-name">${this._esc(global.name)}</div>
                         </div>
                     </div>
                 ` : ''}
@@ -400,20 +431,21 @@ class HighScoreManager {
     }
     
     // Rows for one ranked list; medals for the top three of that list.
+    // Every field here came from Firestore (other players) — escape/coerce all of it.
     _renderRows(scores, personal) {
         return scores.map((score, index) => {
             const isYou = personal && score.playerName === personal.name && score.score === personal.score;
             const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-            const chip = score.variant ? `<span class="player-variant">${score.variant}</span>` : '';
+            const chip = score.variant ? `<span class="player-variant">${this._esc(score.variant)}</span>` : '';
             
             return `
                 <div class="leaderboard-item ${isYou ? 'is-you' : ''} ${index < 3 ? 'top-three' : ''}">
                     <div class="leaderboard-rank">${medal || (index + 1)}</div>
                     <div class="leaderboard-player">
-                        <div class="player-name">${score.playerName}${isYou ? ' (You)' : ''} ${chip}</div>
-                        <div class="player-date">${score.date}</div>
+                        <div class="player-name">${this._esc(score.playerName)}${isYou ? ' (You)' : ''} ${chip}</div>
+                        <div class="player-date">${this._esc(score.date)}</div>
                     </div>
-                    <div class="leaderboard-score">${score.score}</div>
+                    <div class="leaderboard-score">${Number(score.score) || 0}</div>
                 </div>
             `;
         }).join('');
