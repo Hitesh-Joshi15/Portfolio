@@ -675,11 +675,14 @@ body.light-theme .navbar.scrolled {
 /* === HERO SECTION === */
 .hero {
     position: relative;
-    height: 100vh;
+    /* min-height (not height): on short/zoomed windows the section grows instead
+       of clipping the title above the viewport (overflow:hidden + flex centering). */
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding: 96px 0; /* symmetric: keeps centering identical when content fits; clears the fixed navbar when it doesn't */
 }
 
 .three-container {
