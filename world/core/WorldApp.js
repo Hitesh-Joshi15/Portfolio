@@ -7,6 +7,7 @@
 
 import { CameraRig } from './CameraRig.js';
 import { InputManager } from './InputManager.js';
+import { TouchJoystick } from './TouchJoystick.js';
 import { StateMachine, State } from './StateMachine.js';
 import { Interactables } from './Interactables.js';
 import { AssetLoader } from './AssetLoader.js';
@@ -30,6 +31,14 @@ export class WorldApp {
         this._initRenderer();
         this._initScene();
 
+        // ?touch=1 forces touch mode for desktop testing.
+        this.isTouch = window.matchMedia('(pointer: coarse)').matches ||
+            new URLSearchParams(window.location.search).has('touch');
+
+        // Joystick preference is remembered; defaults to on for touch devices only.
+        const savedJoy = localStorage.getItem('world_joystick_enabled');
+        this.joystickEnabled = savedJoy === null ? this.isTouch : savedJoy === '1';
+
         this.rig = new CameraRig(this.camera);
         this.input = new InputManager(this.renderer.domElement);
         this.state = new StateMachine(State.SEATED);
@@ -39,13 +48,34 @@ export class WorldApp {
             onToggleLight: () => {
                 if (this.room) this.hud.setLightState(this.room.toggleTubeLight());
             },
+            onToggleJoystick: () => this._toggleJoystick(),
+            isTouch: this.isTouch,
         });
+
+        // Created on every device — the HUD toggle decides (touchscreen laptops work too).
+        this.joystick = new TouchJoystick(this.container);
+        this.input.attachJoystick(this.joystick);
+        this.container.classList.toggle('world-joystick-on', this.joystickEnabled);
+        this.hud.setJoystickState(this.joystickEnabled);
+
+        if (this.isTouch) {
+            this.container.classList.add('world-touch'); // CSS hook: rotate-to-landscape overlay
+            // Fullscreen + orientation lock need a user gesture; try once on first touch.
+            this._onFirstTouch = () => {
+                this.container.removeEventListener('pointerdown', this._onFirstTouch);
+                this._tryLandscape();
+            };
+            this.container.addEventListener('pointerdown', this._onFirstTouch);
+        }
 
         this.interactables = new Interactables(this.camera, this.container, () => this.state.current);
         this.screenView = new ScreenView(this.container, { onBack: () => this._exitMonitor() });
 
         this.input.onEscape = () => this._onEscape();
-        this.state.onChange((next) => this.hud.setState(next));
+        this.state.onChange((next) => {
+            this.hud.setState(next);
+            this._refreshJoystick(next);
+        });
         this.hud.setState(State.SEATED);
 
         this._clock = new THREE.Clock();
@@ -136,6 +166,30 @@ export class WorldApp {
         }
     }
 
+    /** Best-effort fullscreen + landscape lock (Android); iOS falls back to the CSS rotate overlay. */
+    async _tryLandscape() {
+        try {
+            if (!document.fullscreenElement && this.container.requestFullscreen) {
+                await this.container.requestFullscreen({ navigationUI: 'hide' });
+            }
+        } catch { /* blocked or unsupported — fine */ }
+        try {
+            await screen.orientation?.lock?.('landscape');
+        } catch { /* iOS / not fullscreen — the rotate overlay handles portrait */ }
+    }
+
+    _toggleJoystick() {
+        this.joystickEnabled = !this.joystickEnabled;
+        localStorage.setItem('world_joystick_enabled', this.joystickEnabled ? '1' : '0');
+        this.container.classList.toggle('world-joystick-on', this.joystickEnabled);
+        this.hud.setJoystickState(this.joystickEnabled);
+        this._refreshJoystick();
+    }
+
+    _refreshJoystick(state = this.state.current) {
+        this.joystick?.setVisible(this.joystickEnabled && state === State.WALKING);
+    }
+
     _onEscape() {
         if (this.state.is(State.MONITOR)) {
             this._exitMonitor();
@@ -215,6 +269,10 @@ export class WorldApp {
         this.stop();
         window.removeEventListener('resize', this._onResize);
         document.removeEventListener('visibilitychange', this._onVisibility);
+        if (this._onFirstTouch) this.container.removeEventListener('pointerdown', this._onFirstTouch);
+        if (document.fullscreenElement) document.exitFullscreen?.()?.catch?.(() => {});
+        this.container.classList.remove('world-touch', 'world-joystick-on');
+        this.joystick?.dispose();
         this.input?.dispose();
         this.interactables?.dispose();
         this.screenView?.dispose();

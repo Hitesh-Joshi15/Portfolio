@@ -117,8 +117,11 @@ export class CameraRig {
         let dz = this._fwd.z * mv.forward + this._right.z * mv.right;
         const len = Math.hypot(dx, dz);
         if (len > 0) {
-            dx = (dx / len) * speed;
-            dz = (dz / len) * speed;
+            // Analog magnitude: half-tilted joystick walks at half speed
+            // (keyboard input is always magnitude >= 1, so it's unaffected).
+            const mag = Math.min(1, Math.hypot(mv.forward, mv.right));
+            dx = (dx / len) * speed * mag;
+            dz = (dz / len) * speed * mag;
         }
 
         // Axis-separated so you slide along walls/desk; the region test keeps you

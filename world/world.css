@@ -47,15 +47,15 @@ body.world-open .cursor-follower {
     pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
-    padding: 0.6rem 1.15rem;
+    gap: 0.3rem;
+    padding: 0.17rem 0.42rem;
     border-radius: 999px;
     border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
     background: rgba(10, 10, 18, 0.55);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     color: #fff;
-    font-size: 0.95rem;
+    font-size: 0.62rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     cursor: pointer;
@@ -88,6 +88,14 @@ body.world-open .cursor-follower {
     right: 22px;
 }
 .world-light-btn.is-off {
+    opacity: 0.72;
+}
+
+.world-joystick-btn {
+    top: 46px;
+    right: 22px;
+}
+.world-joystick-btn.is-off {
     opacity: 0.72;
 }
 
@@ -396,11 +404,108 @@ body.world-hovering #world3d canvas.world-canvas {
 
 @media (max-width: 640px) {
     .world-legend { font-size: 0.72rem; }
-    .world-pill { font-size: 0.85rem; padding: 0.5rem 0.95rem; }
+    .world-pill { font-size: 0.58rem; padding: 0.14rem 0.36rem; }
+}
+
+/* ---- virtual joystick (touch movement) ---- */
+/* Deliberately faint — a soft blur hinting "stick lives here"; it brightens on use. */
+.world-joystick {
+    position: absolute;
+    left: calc(26px + env(safe-area-inset-left, 0px));
+    bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 240, 255, 0.18);
+    background: radial-gradient(circle, rgba(10, 10, 18, 0.1) 0%, rgba(10, 10, 18, 0.28) 100%);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    touch-action: none;
+    display: none;
+    z-index: 8;
+}
+.world-joystick.visible { display: block; }
+.world-joystick-knob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 240, 255, 0.14);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.18);
+    pointer-events: none; /* the base owns all pointer events */
+}
+
+.world-joystick.engaged {
+    border-color: rgba(0, 240, 255, 0.4);
+}
+.world-joystick.engaged .world-joystick-knob {
+    background: rgba(0, 240, 255, 0.3);
+    border-color: rgba(0, 240, 255, 0.75);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
+}
+
+/* When the joystick is enabled it owns bottom-left, so the legend moves right.
+   .world-joystick-on is set by WorldApp from the HUD toggle (any device). */
+.world-joystick-on .world-legend {
+    left: auto;
+    right: 22px;
+    bottom: 28px;
+    max-width: 46vw;
+    text-align: right;
+}
+
+/* ---- rotate-to-landscape overlay (portrait phones/tablets) ---- */
+.world-rotate {
+    position: absolute;
+    inset: 0;
+    z-index: 60; /* above pills/legend within the HUD; boot loader & monitor view stay above */
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    padding: 2rem;
+    text-align: center;
+    background: rgba(6, 6, 12, 0.94);
+    color: #fff;
+    pointer-events: auto;
+}
+.world-rotate i {
+    font-size: 3.2rem;
+    color: var(--primary-color, #00f0ff);
+    animation: world-rotate-nudge 1.8s ease-in-out infinite;
+}
+.world-rotate p {
+    margin: 0;
+    font-family: var(--font-primary, 'Orbitron', sans-serif);
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
+}
+.world-rotate span {
+    color: var(--text-secondary, #b8b8d1);
+    font-size: 0.9rem;
+}
+.world-rotate-exit {
+    position: static;
+    margin-top: 0.8rem;
+}
+@keyframes world-rotate-nudge {
+    0%, 18% { transform: rotate(0deg); }
+    52%, 100% { transform: rotate(90deg); }
+}
+@media (orientation: portrait) {
+    .world-touch .world-rotate { display: flex; }
+    /* the joystick is a HUD sibling and would paint over the overlay */
+    .world-touch .world-joystick.visible { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .world-pill,
     .world-hint,
     .world-loader { transition: none; }
+    .world-rotate i { animation: none; transform: rotate(90deg); }
 }

@@ -14,6 +14,8 @@ export class InputManager {
         this.keys = new Set();
         this._look = { dx: 0, dy: 0 };   // accumulated since last consumeLook()
         this._dragging = false;
+        this._dragPointerId = null;      // the one pointer that owns the look drag
+        this._joystick = null;           // optional TouchJoystick (movement on touch)
         this._lastX = 0;
         this._lastY = 0;
 
@@ -78,6 +80,8 @@ export class InputManager {
     // ---- pointer (look) ----
     _onPointerDown(e) {
         if (!this.enabled) return;
+        if (this._dragPointerId !== null) return; // a finger already owns the drag
+        this._dragPointerId = e.pointerId;
         this._dragging = true;
         this._lastX = e.clientX;
         this._lastY = e.clientY;
@@ -98,6 +102,7 @@ export class InputManager {
         this.hasPointer = true;
 
         if (!this._dragging || !this.enabled) return;
+        if (e.pointerId !== this._dragPointerId) return; // other fingers don't steer the look
         if (Math.abs(e.clientX - this._downX) > 6 || Math.abs(e.clientY - this._downY) > 6) {
             this._moved = true;
         }
@@ -108,6 +113,8 @@ export class InputManager {
     }
 
     _onPointerUp(e) {
+        if (e.pointerId !== this._dragPointerId) return;
+        this._dragPointerId = null;
         this._dragging = false;
         this.dom.classList.remove('world-grabbing');
         if (!this.enabled || !this._downValid) return;
@@ -167,7 +174,7 @@ export class InputManager {
         };
     }
 
-    /** Normalised movement intent from WASD / arrow keys. */
+    /** Normalised movement intent from WASD / arrow keys + optional joystick. */
     getMove() {
         let forward = 0;
         let right = 0;
@@ -175,7 +182,16 @@ export class InputManager {
         if (this.keys.has('s') || this.keys.has('arrowdown')) forward -= 1;
         if (this.keys.has('d') || this.keys.has('arrowright')) right += 1;
         if (this.keys.has('a') || this.keys.has('arrowleft')) right -= 1;
+        if (this._joystick && this._joystick.active) {
+            forward += this._joystick.vector.forward;
+            right += this._joystick.vector.right;
+        }
         return { forward, right };
+    }
+
+    /** Merge a TouchJoystick's analog vector into getMove(). */
+    attachJoystick(joystick) {
+        this._joystick = joystick;
     }
 
     get sprinting() {

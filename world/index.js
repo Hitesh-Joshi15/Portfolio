@@ -88,6 +88,7 @@ export async function bootWorld(container, opts = {}) {
 
     setLoaderProgress(loader, 1);
     setTimeout(() => hideLoader(loader), 350);
+    window.__worldApp = app; // debug/test handle
     return app;
 }
 
@@ -96,6 +97,7 @@ export function closeWorld() {
     if (app) {
         app.dispose();
         app = null;
+        delete window.__worldApp;
     }
     if (activeContainer) {
         activeContainer.innerHTML = '';
