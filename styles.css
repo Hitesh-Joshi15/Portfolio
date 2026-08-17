@@ -786,10 +786,24 @@ body.light-theme .navbar.scrolled {
 .hero-description {
     font-size: 1.2rem;
     color: var(--text-secondary);
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* Current-studies line under the hero description */
+.hero-education {
+    font-size: 0.95rem;
+    font-family: var(--font-mono);
+    color: var(--primary-color);
+    margin: 0 auto 3rem;
+    max-width: 600px;
+    opacity: 0.85;
+}
+
+.hero-education i {
+    margin-right: 0.4rem;
 }
 
 /* Hero Buttons */

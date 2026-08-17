@@ -7,7 +7,7 @@
 export const PROFILE = {
     name: 'Hitesh Joshi',
     role: 'Associate Software Engineer',
-    tagline: 'MUMPS & Full-Stack Developer · AI Integration',
+    tagline: 'AI/ML · GenAI & LLMs · MUMPS & Full-Stack',
     email: 'hiteshjoshi1503@gmail.com',
     phone: '+91 897 843 5384',
     location: 'Vadodara, Gujarat, India',

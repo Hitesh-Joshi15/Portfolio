@@ -222,11 +222,14 @@ function updateScrollProgress() {
 function initTypingEffect() {
     const typedText = document.querySelector('.typed-text');
     const words = [
-        'AI Integration Specialist',
-        'Full Stack Developer', 
-        'Healthcare Tech Innovator',
         'Software Engineer',
+        'AI & ML Engineer',
+        'Generative AI Developer',
+        'AI Agent & LLM Integrator',
+        'Backend & REST API Developer',
         'MUMPS Developer',
+        'Full Stack Developer',
+        'Healthcare Tech Innovator',
         'Problem Solver',
         'Tech Enthusiast'
     ];

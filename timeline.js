@@ -93,6 +93,20 @@ class SpiralTimeline3D {
                     'Participated in Scrum practices for feature development',
                     'Technologies: HTML, CSS, JavaScript, MUMPS, Cache Database, Node.js, JSON, IRIS Studio'
                 ]
+            },
+            {
+                date: 'July 2026 - July 2028 (Expected)',
+                title: 'M.Tech in Artificial Intelligence & Machine Learning (Executive)',
+                company: 'Indian Institute of Information Technology Vadodara (IIIT-V)',
+                type: 'education',
+                summary: 'Executive program · alongside full-time role',
+                description: 'Pursuing an Executive M.Tech in AI & ML while continuing full-time as Associate Software Engineer at Altera — deepening expertise in machine learning, generative AI, and LLM-based systems with no career break.',
+                details: [
+                    'Executive program designed for working professionals — pursued alongside my full-time role at Altera Digital Health',
+                    'Focus areas: Machine Learning, Deep Learning, Generative AI, and LLM-based systems',
+                    'Started July 2026 · expected completion July 2028',
+                    'Continuing to deliver production features at Altera in parallel — no career break'
+                ]
             }
         ];
         
