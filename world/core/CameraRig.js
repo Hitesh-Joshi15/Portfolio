@@ -90,12 +90,11 @@ export class CameraRig {
         if (this.mode !== 'seated' && this.mode !== 'walking') return;
         if (look.dx === 0 && look.dy === 0) return;
 
-        // LOOK DIRECTION — LOCKED (grab / natural): the scene follows the cursor.
-        //   drag right => room moves right   drag down => room moves down
-        // (i.e. you drag the world in the direction you move the cursor.)
-        // Do NOT flip these signs; this is the intended, final feel.
-        this.yaw += look.dx * TUNING.lookSensitivity;
-        this.pitch += look.dy * TUNING.lookSensitivity;
+        // LOOK DIRECTION — INVERTED (FPS style, changed by request 2026-08-17):
+        //   drag right => you look right   drag down => you look down
+        // (the camera follows the cursor; the room moves opposite the drag.)
+        this.yaw -= look.dx * TUNING.lookSensitivity;
+        this.pitch -= look.dy * TUNING.lookSensitivity;
         this.pitch = THREE.MathUtils.clamp(this.pitch, -TUNING.pitchLimit, TUNING.pitchLimit);
 
         if (this.mode === 'seated') {
