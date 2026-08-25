@@ -23,6 +23,60 @@ class HighScoreManager {
             .slice(0, 30);
     }
 
+    // ---- inappropriate-name filter ----
+    // There is no sign-in, so names are honor-system; this keeps obscene ones
+    // off the public boards. Checked at save time AND at render time (render
+    // covers names written straight to Firestore, bypassing the client).
+    static get _NAME_BLOCK_SUBSTR() {
+        // Unambiguous even inside other words (leet-normalized, letters only).
+        return ['fuck', 'fock', 'fuk', 'fuq', 'fux', 'fcuk', 'phuck', 'fckin',
+            'shit', 'bitch', 'biatch', 'cunt', 'nigger', 'nigga', 'faggot',
+            'whore', 'slut', 'rapist', 'porn', 'penis', 'vagina', 'boob',
+            'blowjob', 'handjob', 'dildo', 'wanker', 'retard', 'dickhead',
+            'asshole', 'jackass', 'dumbass', 'pedo', 'hitler', 'nazi',
+            'chutiya', 'chutia', 'madarchod', 'motherchod', 'behenchod',
+            'bhenchod', 'bhosdi', 'bhosad', 'lauda', 'lawda', 'gandu',
+            'gaand', 'randi', 'jhaat', 'tatti', 'haraami', 'harami', 'kutti',
+            'kamini', 'hijra', 'chinaal', 'chinal', 'rakhail'];
+    }
+
+    static get _NAME_BLOCK_TOKEN() {
+        // Too short/common for substring matching — must equal a whole token
+        // (so Assassin, Cassandra, Sexton, Dickens all stay legal).
+        return ['ass', 'sex', 'cum', 'tit', 'tits', 'hoe', 'fag', 'dick',
+            'cock', 'rape', 'anal', 'nude', 'nudes', 'xxx', 'lund', 'lode',
+            'gand', 'raand', 'chod'];
+    }
+
+    // Lowercase + undo common leetspeak so 'F0¢k_U' style spellings match.
+    _normalizeForFilter(name) {
+        const leet = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '@': 'a', '$': 's', '!': 'i', '+': 't', '¢': 'c', '€': 'e' };
+        return String(name ?? '')
+            .toLowerCase()
+            .replace(/[013457 8@$!+¢€]/g, (ch) => leet[ch] ?? ch);
+    }
+
+    _isNameClean(name) {
+        const norm = this._normalizeForFilter(name);
+        const squashed = norm.replace(/[^a-z]/g, '');                 // 'f.u.c.k' -> 'fuck'
+        const collapsed = squashed.replace(/(.)\1+/g, '$1');          // 'fuuuck' -> 'fuck'
+        for (const w of HighScoreManager._NAME_BLOCK_SUBSTR) {
+            if (squashed.includes(w) || collapsed.includes(w)) return false;
+        }
+        const tokens = norm.split(/[^a-z]+/).filter(Boolean);
+        for (const t of tokens) {
+            if (HighScoreManager._NAME_BLOCK_TOKEN.includes(t)) return false;
+        }
+        return true;
+    }
+
+    // What the leaderboard shows: hostile/obscene names become 'Anonymous'.
+    _displayName(name) {
+        const clean = this._sanitizeName(name);
+        if (!clean || !this._isNameClean(clean)) return 'Anonymous';
+        return clean;
+    }
+
     // Escape remote-sourced values before they hit innerHTML (leaderboards
     // render OTHER players' data — treat all of it as hostile).
     _esc(value) {
@@ -33,20 +87,31 @@ class HighScoreManager {
 
     // PLAYER NAME MANAGEMENT
     getPlayerName() {
-        return this._sanitizeName(localStorage.getItem(this.playerNameKey) || '');
+        const name = this._sanitizeName(localStorage.getItem(this.playerNameKey) || '');
+        // A profane name planted in localStorage must never reach a submission.
+        return this._isNameClean(name) ? name : '';
     }
 
     setPlayerName(name) {
-        localStorage.setItem(this.playerNameKey, this._sanitizeName(name));
+        const clean = this._sanitizeName(name);
+        if (!this._isNameClean(clean)) return false; // rejected — keep the old name
+        localStorage.setItem(this.playerNameKey, clean);
+        return true;
     }
 
     promptForName() {
         const currentName = this.getPlayerName();
-        const raw = prompt(`Enter your name for the leaderboards:`, currentName || 'Anonymous');
-        const name = this._sanitizeName(raw);
-        if (name) {
-            this.setPlayerName(name);
-            return name;
+        let message = 'Enter your name for the leaderboards:';
+        for (let attempt = 0; attempt < 3; attempt++) {
+            const raw = prompt(message, currentName || 'Anonymous');
+            if (raw === null) break; // user cancelled
+            const name = this._sanitizeName(raw);
+            if (!name) break;
+            if (this._isNameClean(name)) {
+                this.setPlayerName(name);
+                return name;
+            }
+            message = 'That name isn\'t allowed on the leaderboards — please pick another:';
         }
         return currentName || 'Anonymous';
     }
@@ -292,7 +357,7 @@ class HighScoreManager {
             const data = doc.data();
             const worldRecord = {
                 score: data.score,
-                name: data.playerName,
+                name: this._displayName(data.playerName),
                 date: data.date
             };
             
@@ -323,7 +388,7 @@ class HighScoreManager {
                         <div class="score-preview-content">
                             <div class="score-preview-label">Your Best</div>
                             <div class="score-preview-value">${Number(personal.score) || 0}</div>
-                            <div class="score-preview-name">${this._esc(personal.name)}</div>
+                            <div class="score-preview-name">${this._esc(this._displayName(personal.name))}</div>
                         </div>
                     </div>
                 ` : ''}
@@ -335,7 +400,7 @@ class HighScoreManager {
                         <div class="score-preview-content">
                             <div class="score-preview-label">World Record</div>
                             <div class="score-preview-value">${Number(global.score) || 0}</div>
-                            <div class="score-preview-name">${this._esc(global.name)}</div>
+                            <div class="score-preview-name">${this._esc(this._displayName(global.name))}</div>
                         </div>
                     </div>
                 ` : ''}
@@ -442,7 +507,7 @@ class HighScoreManager {
                 <div class="leaderboard-item ${isYou ? 'is-you' : ''} ${index < 3 ? 'top-three' : ''}">
                     <div class="leaderboard-rank">${medal || (index + 1)}</div>
                     <div class="leaderboard-player">
-                        <div class="player-name">${this._esc(score.playerName)}${isYou ? ' (You)' : ''} ${chip}</div>
+                        <div class="player-name">${this._esc(this._displayName(score.playerName))}${isYou ? ' (You)' : ''} ${chip}</div>
                         <div class="player-date">${this._esc(score.date)}</div>
                     </div>
                     <div class="leaderboard-score">${Number(score.score) || 0}</div>
