@@ -32,23 +32,26 @@ class HighScoreManager {
         return ['fuck', 'fock', 'fuk', 'fuq', 'fux', 'fcuk', 'phuck', 'fckin',
             'shit', 'bitch', 'biatch', 'cunt', 'nigger', 'nigga', 'faggot',
             'whore', 'slut', 'rapist', 'porn', 'penis', 'vagina', 'boob',
-            'blowjob', 'handjob', 'dildo', 'wanker', 'retard', 'dickhead',
-            'asshole', 'jackass', 'dumbass', 'pedo', 'hitler', 'nazi',
-            'chutiya', 'chutia', 'madarchod', 'motherchod', 'behenchod',
-            'bhenchod', 'bhosdi', 'bhosad', 'lauda', 'lawda', 'gandu',
-            'gaand', 'randi', 'jhaat', 'tatti', 'haraami', 'harami', 'kutti',
-            'kamini', 'hijra', 'chinaal', 'chinal', 'rakhail'];
+            'blowjob', 'handjob', 'dildo', 'wanker', 'wank', 'retard',
+            'dickhead', 'asshole', 'jackass', 'dumbass', 'pedo', 'bastard',
+            'douche', 'prick', 'twat', 'skank', 'pussy', 'jizz',
+            'chutiya', 'chutia', 'chodu', 'madarchod', 'motherchod',
+            'behenchod', 'bhenchod', 'bakchod', 'bhosdi', 'bhosad', 'bhadwa',
+            'lauda', 'lawda', 'gandu', 'gaand', 'randi', 'jhaat', 'tatti',
+            'haraami', 'harami', 'kutti', 'kamini', 'kamina', 'hijra',
+            'chinaal', 'chinal', 'rakhail'];
     }
 
     static get _NAME_BLOCK_TOKEN() {
         // Too short/common for substring matching — must equal a whole token
-        // (so Assassin, Cassandra, Sexton, Dickens all stay legal).
-        return ['ass', 'sex', 'cum', 'tit', 'tits', 'hoe', 'fag', 'dick',
-            'cock', 'rape', 'anal', 'nude', 'nudes', 'xxx', 'lund', 'lode',
-            'gand', 'raand', 'chod'];
+        // (so Assassin, Cassandra, Sexton, Dickens, Arsenal all stay legal).
+        return ['ass', 'arse', 'sex', 'cum', 'tit', 'tits', 'hoe', 'fag',
+            'dick', 'cock', 'rape', 'anal', 'nude', 'nudes', 'xxx', 'lund',
+            'lode', 'gand', 'raand', 'chod', 'saala', 'saali'];
     }
 
     // Lowercase + undo common leetspeak so 'F0¢k_U' style spellings match.
+    // '*' is kept as a wildcard so self-censored names like 'f**k' match too.
     _normalizeForFilter(name) {
         const leet = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '@': 'a', '$': 's', '!': 'i', '+': 't', '¢': 'c', '€': 'e' };
         return String(name ?? '')
@@ -56,16 +59,36 @@ class HighScoreManager {
             .replace(/[013457 8@$!+¢€]/g, (ch) => leet[ch] ?? ch);
     }
 
+    // Substring match where '*' in the name matches any letter of the blocked
+    // word ('f**k' -> fuck). Needs >= 2 real letter anchors so '****' or a
+    // single coincidental letter can't trigger it.
+    _matchesBlocked(str, word) {
+        if (str.length < word.length) return false;
+        outer: for (let i = 0; i <= str.length - word.length; i++) {
+            let letters = 0;
+            for (let j = 0; j < word.length; j++) {
+                const c = str[i + j];
+                if (c === '*') continue;
+                if (c !== word[j]) continue outer;
+                letters++;
+            }
+            if (letters >= 2) return true;
+        }
+        return false;
+    }
+
     _isNameClean(name) {
         const norm = this._normalizeForFilter(name);
-        const squashed = norm.replace(/[^a-z]/g, '');                 // 'f.u.c.k' -> 'fuck'
-        const collapsed = squashed.replace(/(.)\1+/g, '$1');          // 'fuuuck' -> 'fuck'
+        const squashed = norm.replace(/[^a-z*]/g, '');                    // 'f.u.c.k' -> 'fuck'
+        const collapsed = squashed.replace(/([a-z])\1+/g, '$1');          // 'fuuuck' -> 'fuck' (keeps '**')
         for (const w of HighScoreManager._NAME_BLOCK_SUBSTR) {
-            if (squashed.includes(w) || collapsed.includes(w)) return false;
+            if (this._matchesBlocked(squashed, w) || this._matchesBlocked(collapsed, w)) return false;
         }
-        const tokens = norm.split(/[^a-z]+/).filter(Boolean);
+        const tokens = norm.split(/[^a-z*]+/).filter(Boolean);
         for (const t of tokens) {
-            if (HighScoreManager._NAME_BLOCK_TOKEN.includes(t)) return false;
+            for (const w of HighScoreManager._NAME_BLOCK_TOKEN) {
+                if (t.length === w.length && this._matchesBlocked(t, w)) return false;
+            }
         }
         return true;
     }
