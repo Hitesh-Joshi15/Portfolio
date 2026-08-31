@@ -103,57 +103,62 @@ class SoundSystem {
     }
 
     createSounds() {
+        // Soothing palette: every attack ≥ 10ms (no percussive tick), modest
+        // gains, mid-range frequencies, consonant intervals only.
         this.sounds.hover = () => {
-            this.playTone(540, 0.045, { type: 'triangle', gainScale: 0.2, attack: 0.004 });
+            this.playTone(480, 0.06, { type: 'sine', gainScale: 0.13, attack: 0.012 });
         };
 
         this.sounds.click = () => {
-            this.playTone(290, 0.07, { type: 'sine', gainScale: 0.3, attack: 0.003 });
+            this.playTone(290, 0.09, { type: 'sine', gainScale: 0.2, attack: 0.012 });
             setTimeout(() => {
-                this.playTone(430, 0.04, { type: 'triangle', gainScale: 0.16, attack: 0.003 });
-            }, 26);
+                this.playTone(435, 0.06, { type: 'sine', gainScale: 0.11, attack: 0.012 });
+            }, 30);
         };
 
         this.sounds.type = () => {
-            this.playTone(920, 0.02, { type: 'sine', gainScale: 0.11, attack: 0.002 });
+            this.playTone(700, 0.028, { type: 'sine', gainScale: 0.07, attack: 0.008 });
         };
 
         this.sounds.success = () => {
-            this.playChord([440, 554.37, 659.25], 85, 0.08, {
+            this.playChord([440, 554.37, 659.25], 95, 0.12, {
                 type: 'sine',
-                gainScale: 0.2
+                gainScale: 0.15,
+                attack: 0.014
             });
         };
 
         this.sounds.error = () => {
-            this.playTone(340, 0.08, { type: 'triangle', gainScale: 0.19, attack: 0.004 });
+            // Gentle falling minor third — informative, never punishing.
+            this.playTone(330, 0.1, { type: 'sine', gainScale: 0.14, attack: 0.014 });
             setTimeout(() => {
-                this.playTone(246.94, 0.1, { type: 'sine', gainScale: 0.16, attack: 0.004 });
-            }, 90);
+                this.playTone(246.94, 0.12, { type: 'sine', gainScale: 0.11, attack: 0.014 });
+            }, 100);
         };
 
         this.sounds.notification = () => {
-            this.playTone(740, 0.05, { type: 'sine', gainScale: 0.2, attack: 0.003 });
+            this.playTone(659.25, 0.07, { type: 'sine', gainScale: 0.14, attack: 0.012 });
             setTimeout(() => {
-                this.playTone(880, 0.06, { type: 'sine', gainScale: 0.16, attack: 0.003 });
-            }, 55);
+                this.playTone(783.99, 0.08, { type: 'sine', gainScale: 0.11, attack: 0.012 });
+            }, 65);
         };
 
         this.sounds.whoosh = () => {
-            this.playSoftSweep(260, 140, 0.24, 0.2);
+            this.playSoftSweep(260, 140, 0.26, 0.15);
         };
 
         this.sounds.loaderLogo = () => {
-            this.playTone(392, 0.08, { type: 'sine', gainScale: 0.22, attack: 0.004 });
+            this.playTone(392, 0.1, { type: 'sine', gainScale: 0.15, attack: 0.014 });
             setTimeout(() => {
-                this.playTone(523.25, 0.09, { type: 'triangle', gainScale: 0.16, attack: 0.004 });
-            }, 70);
+                this.playTone(523.25, 0.11, { type: 'sine', gainScale: 0.12, attack: 0.014 });
+            }, 80);
         };
 
         this.sounds.loaderName = () => {
-            this.playChord([349.23, 440, 587.33], 95, 0.09, {
+            this.playChord([349.23, 440, 587.33], 100, 0.11, {
                 type: 'sine',
-                gainScale: 0.19
+                gainScale: 0.14,
+                attack: 0.014
             });
         };
 
@@ -169,13 +174,14 @@ class SoundSystem {
         };
 
         this.sounds.loaderDissolve = () => {
-            this.playSoftSweep(420, 170, 0.34, 0.17);
+            this.playSoftSweep(420, 170, 0.36, 0.13);
         };
 
         this.sounds.wordComplete = () => {
-            this.playChord([392, 493.88, 587.33], 90, 0.085, {
-                type: 'triangle',
-                gainScale: 0.2
+            this.playChord([392, 493.88, 587.33], 95, 0.11, {
+                type: 'sine',
+                gainScale: 0.15,
+                attack: 0.014
             });
         };
     }
@@ -186,7 +192,7 @@ class SoundSystem {
         const {
             type = 'sine',
             gainScale = 0.25,
-            attack = 0.004,
+            attack = 0.01, // default soft onset — no percussive tick
             detune = 0
         } = options;
 
@@ -235,7 +241,7 @@ class SoundSystem {
 
         const peak = Math.max(0.0001, this.volume * this.sfxGainScale * gainScale);
         gainNode.gain.setValueAtTime(0.0001, now);
-        gainNode.gain.linearRampToValueAtTime(peak, now + 0.02);
+        gainNode.gain.linearRampToValueAtTime(peak, now + 0.035); // eased onset
         gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
         oscillator.connect(filter);

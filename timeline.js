@@ -489,6 +489,10 @@ class SpiralTimeline3D {
             
             // Center card vertically with node
             cardY = screenNodeY - (cardHeight / 2);
+            
+            // Top card anchors to the spiral's highest node — without this clamp
+            // it floats above the container and covers the section title.
+            if (cardY < 8) cardY = 8;
         }
         
         // Store calculated positions
