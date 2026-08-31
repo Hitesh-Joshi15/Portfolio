@@ -167,12 +167,62 @@ class WordTetris {
             'RADIO', 'RIVER', 'ROBOT', 'SEVEN', 'SHARE', 'SHARP', 'SHINE', 'SHIRT', 'SHORT',
             'SMALL', 'SMILE', 'SPEAK', 'SPEED', 'SPEND', 'SPORT', 'STAGE', 'STAIR', 'STORE',
             'STORM', 'STORY', 'STUDY', 'SUGAR', 'SWEET', 'TABLE', 'TEACH', 'TIGER', 'TODAY',
-            'TOUCH', 'TOWER', 'VOICE', 'WATCH', 'WHEEL', 'WHITE', 'WOMAN', 'WRITE', 'YOUNG'
+            'TOUCH', 'TOWER', 'VOICE', 'WATCH', 'WHEEL', 'WHITE', 'WOMAN', 'WRITE', 'YOUNG',
+            // Coverage expansion (2026-08-31): every common 3-6 letter word we tested missing
+            'ADD', 'AID', 'AIM', 'ANY', 'APP', 'ARC', 'ASH', 'BIO', 'BOO', 'BYE', 'CAB', 'CAP', 'CAW', 'DAB', 'DEL',
+            'DIN', 'DUO', 'EBB', 'EEL', 'EGO', 'ELK', 'ELM', 'EMU', 'EVE', 'FAB', 'FAD', 'FEE', 'FLU', 'FUR', 'GAG',
+            'GAL', 'GIG', 'GIN', 'GNU', 'HEX', 'HID', 'HOG', 'HUB', 'HUE', 'IMP', 'ION', 'IRE', 'JAB', 'JIG', 'JOT',
+            'JUG', 'KEG', 'LAG', 'LOB', 'LOO', 'LOP', 'LUG', 'MAX', 'MID', 'MIN', 'MOO', 'NAB', 'NAG', 'NIL', 'NIP',
+            'OFT', 'OHM', 'OPT', 'ORC', 'PEP', 'PEW', 'PLY', 'POX', 'PRY', 'PUN', 'PUS', 'RAD', 'REF', 'RIG', 'ROE',
+            'RUB', 'RUE', 'RUM', 'RUT', 'SAC', 'SAG', 'SEW', 'SOD', 'SOP', 'SOT', 'STY', 'SUE', 'TAM', 'THY', 'TIC',
+            'TOT', 'TUT', 'UMP', 'VIA', 'VIE', 'VIM', 'WAD', 'WAN', 'WEE', 'WOE', 'YAP', 'YAW', 'YEW', 'ZAG', 'ZEN', 'ZIG',
+            'ABLE', 'ACID', 'AREA', 'ARMY', 'AUNT', 'AUTO', 'BABY', 'BACK', 'BAKE', 'BANK', 'BARN', 'BATH', 'BELL',
+            'BELT', 'BEND', 'BENT', 'BIKE', 'BILL', 'BLOW', 'BLUE', 'BODY', 'BOMB', 'BONE', 'BORN', 'BOSS', 'BULK',
+            'BULL', 'BUMP', 'BURY', 'BUSY', 'CAGE', 'CALF', 'CAME', 'CHEF', 'CHIN', 'CHOP', 'CITE', 'CLAN', 'CLAW',
+            'COIL', 'COMB', 'COME', 'CORD', 'COZY', 'CRAB', 'CROW', 'CURL', 'DAMP', 'DARE', 'DART', 'DASH', 'DATA',
+            'DEBT', 'DENT', 'DENY', 'DIAL', 'DIET', 'DINE', 'DIVE', 'DOES', 'DOME', 'DONE', 'DOSE', 'DOVE', 'DOZE',
+            'DRAG', 'DRIP', 'DULL', 'DUMB', 'DUMP', 'DUSK', 'EDIT', 'ELSE', 'EVEN', 'EVER', 'EVIL', 'FAKE', 'FAME',
+            'FATE', 'FERN', 'FIRM', 'FLEA', 'FLED', 'FLEW', 'FLEX', 'FOND', 'FONT', 'FOUL', 'GAIN', 'GANG', 'GAZE',
+            'GEAR', 'GENE', 'GLEE', 'GONE', 'GOWN', 'GULF', 'GUST', 'HALT', 'HARE', 'HATE', 'HAUL', 'HAVE', 'HAZE',
+            'HEAP', 'HERB', 'HERD', 'HERS', 'HIKE', 'HIRE', 'HISS', 'HIVE', 'HOLY', 'HOOD', 'HOOF', 'HOOT', 'HOST',
+            'HOWL', 'HUNG', 'HUSH', 'HYMN', 'IDLE', 'IDOL', 'INTO', 'ITCH', 'JAIL', 'JAZZ', 'JOLT', 'JURY', 'KELP',
+            'KEEN', 'KNIT', 'KNOB', 'KNOT', 'LAVA', 'LAZE', 'LEAK', 'LIAR', 'LOAF', 'LOAN', 'LOBE', 'LONE', 'LOOM',
+            'LORD', 'LUMP', 'LUNG', 'LURE', 'LUSH', 'LYNX', 'MAID', 'MASS', 'MAST', 'MATE', 'MEEK', 'MEMO', 'MESH',
+            'MICE', 'MODE', 'MOLD', 'MOLE', 'MONK', 'MOSS', 'MULE', 'MYTH', 'NOUN', 'OATH', 'OBEY', 'ODDS', 'OKAY',
+            'OMIT', 'ONTO', 'OPAL', 'ORAL', 'OURS', 'PACK', 'PAWN', 'PEEK', 'PEEL', 'PERK', 'PEST', 'PLEA', 'PLUM',
+            'POKE', 'POLL', 'PONY', 'PORK', 'POSE', 'PRAY', 'PREY', 'PROP', 'PUFF', 'QUAY', 'RAGE', 'RAID', 'RAKE',
+            'RAMP', 'RANG', 'RASH', 'REAP', 'RELY', 'RENT', 'RIND', 'ROBE', 'RUIN', 'RUNG', 'SAGA', 'SAGE', 'SAKE',
+            'SANG', 'SASH', 'SCAN', 'SCAR', 'SEAM', 'SHED', 'SHIN', 'SILO', 'SKID', 'SLAB', 'SLAM', 'SLED', 'SLID',
+            'SLIM', 'SLOT', 'SLUG', 'SMOG', 'SNUG', 'SOAK', 'SOAR', 'SOLE', 'SOLO', 'SORE', 'SPAN', 'SPUR', 'STAB',
+            'STEW', 'SUCH', 'SWAB', 'SWAN', 'SWAP', 'SWAY', 'TACT', 'TAME', 'TEAL', 'THAW', 'THUS', 'TICK', 'TILT',
+            'TOMB', 'TORE', 'TOSS', 'TRAY', 'TREK', 'TROT', 'TUCK', 'TUSK', 'TWIG', 'UGLY', 'UNDO', 'URGE', 'VAIN',
+            'VASE', 'VAST', 'VEIL', 'VEIN', 'VENT', 'VERB', 'VEST', 'VINE', 'VOID', 'VOLT', 'WAGE', 'WARD', 'WARY',
+            'WASP', 'WEED', 'WEEP', 'WELD', 'WEPT', 'WHIM', 'WHIP', 'WICK', 'WIFE', 'WIPE', 'WOVE', 'YAWN', 'YOGA',
+            'YOLK', 'YOUR', 'ZEAL', 'ZINC', 'ZOOM',
+            'ANGEL', 'ANGRY', 'BADGE', 'BERRY', 'BLAZE', 'BLOOM', 'BONUS', 'BRAVE', 'BRICK', 'BRIDE', 'BROOM',
+            'CABIN', 'CANDY', 'CARGO', 'CHAIN', 'CHALK', 'CHARM', 'CHEEK', 'CHEER', 'CHILD', 'CHILL', 'CLOTH',
+            'COACH', 'COAST', 'CORAL', 'COUCH', 'CRAFT', 'CRASH', 'CREAM', 'CROWD', 'CROWN', 'DAISY', 'DELTA',
+            'DIARY', 'DOUGH', 'DRIFT', 'EAGLE', 'ELBOW', 'EMPTY', 'FAIRY', 'FEAST', 'FENCE', 'FEVER', 'FLAME',
+            'FLASH', 'FLOCK', 'FLOUR', 'FOCUS', 'FORGE', 'FRAME', 'FROST', 'GHOST', 'GIANT', 'GLOBE', 'GLORY',
+            'GRAPE', 'GRASS', 'GREET', 'GUARD', 'GUEST', 'GUIDE', 'HONEY', 'HOTEL', 'HUMOR', 'IVORY', 'JELLY',
+            'JEWEL', 'JUICE', 'KNIFE', 'LEMON', 'LUNCH', 'MAPLE', 'MARCH', 'MEDAL', 'MERCY', 'METAL', 'MIGHT',
+            'MINER', 'MODEL', 'MOTOR', 'MOUNT', 'NOBLE', 'NOISE', 'OLIVE', 'ONION', 'ORBIT', 'OTTER', 'PANDA',
+            'PEACH', 'PEARL', 'PENNY', 'PILOT', 'PLAZA', 'POUCH', 'PRIZE', 'PUPIL', 'QUEST', 'RAZOR', 'RIDGE',
+            'ROAST', 'RUGBY', 'SALAD', 'SCARF', 'SCOUT', 'SHARK', 'SHEEP', 'SHELF', 'SHELL', 'SHOUT', 'SKATE',
+            'SKULL', 'SLICE', 'SNAKE', 'SOLAR', 'SPARK', 'SPICE', 'SPOON', 'SQUAD', 'STEEL', 'STOOL', 'SWORD',
+            'TENTH', 'THEME', 'TIDAL', 'TOAST', 'TORCH', 'TOWEL', 'TRACK', 'TRIBE', 'TRICK', 'TRUCK', 'TRUNK',
+            'TULIP', 'UNCLE', 'UNION', 'VAPOR', 'VENOM', 'VIVID', 'WAGON', 'WHALE', 'WHEAT', 'WITCH', 'WOUND',
+            'YACHT', 'YEAST', 'ZEBRA'
         ];
         
-        // Dictionary cache
+        // Dictionary cache — API-validated words persist per device, so a word
+        // only ever needs the network ONCE, then works offline forever.
         this.validWords = new Set();
         this.checkedWords = new Map();
+        try {
+            JSON.parse(localStorage.getItem('wt_valid_words') || '[]')
+                .forEach(w => this.checkedWords.set(w, true));
+        } catch { /* corrupted cache — start fresh */ }
         this.availableWords = []; // Words currently on board
         
         // Track letter cycling for single blocks
@@ -858,6 +908,15 @@ class WordTetris {
             clearTimeout(timeout);
             const isValid = response.ok;
             this.checkedWords.set(word, isValid);
+            if (isValid) {
+                try {
+                    const saved = JSON.parse(localStorage.getItem('wt_valid_words') || '[]');
+                    if (!saved.includes(word)) {
+                        saved.push(word);
+                        localStorage.setItem('wt_valid_words', JSON.stringify(saved.slice(-500)));
+                    }
+                } catch { /* storage full/blocked — cache stays session-only */ }
+            }
             return isValid;
         } catch (error) {
             // Network failed/blocked — the word bank above is the offline

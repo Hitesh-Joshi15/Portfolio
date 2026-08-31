@@ -158,10 +158,14 @@ class SoundSystem {
         };
 
         this.sounds.loaderMotion = () => {
-            this.playTone(228, 0.095, { type: 'triangle', gainScale: 0.46, attack: 0.004 });
-            setTimeout(() => {
-                this.playTone(288, 0.085, { type: 'sine', gainScale: 0.3, attack: 0.004 });
-            }, 24);
+            // Fine particles = sand, not boulders: a whisper of high-passed
+            // noise with a slight random shimmer, at a fraction of the old volume.
+            this.playGrainNoise({
+                duration: 0.11,
+                centerFreq: 3200 + Math.random() * 1400,
+                q: 0.9,
+                gainScale: 0.07,
+            });
         };
 
         this.sounds.loaderDissolve = () => {
@@ -240,6 +244,44 @@ class SoundSystem {
 
         oscillator.start(now);
         oscillator.stop(now + duration + 0.02);
+    }
+
+    // Short burst of bandpassed noise — reads as sand/grains rather than a tone.
+    playGrainNoise({ duration = 0.1, centerFreq = 3000, q = 1, gainScale = 0.08 } = {}) {
+        if (!this.enabled || !this.audioContext || !this.userInteracted) return;
+
+        const ctx = this.audioContext;
+        const now = ctx.currentTime;
+
+        if (!this._grainBuffer) { // one shared noise buffer, sliced at random offsets
+            this._grainBuffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+            const data = this._grainBuffer.getChannelData(0);
+            for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = this._grainBuffer;
+        source.loop = true;
+        source.loopStart = Math.random() * 0.5;
+        source.loopEnd = source.loopStart + 0.5;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = centerFreq;
+        filter.Q.value = q;
+
+        const gainNode = ctx.createGain();
+        const peak = Math.max(0.0001, this.volume * this.sfxGainScale * gainScale);
+        gainNode.gain.setValueAtTime(0.0001, now);
+        gainNode.gain.linearRampToValueAtTime(peak, now + 0.015);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        source.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        source.start(now, source.loopStart);
+        source.stop(now + duration + 0.02);
     }
 
     attachEventListeners() {
