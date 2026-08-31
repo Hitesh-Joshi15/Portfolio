@@ -307,6 +307,7 @@ class TypingGame {
         
         // Get high scores (async because it fetches from Firebase)
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.hub.container.innerHTML = `
             <div class="typing-game glass-effect">
@@ -668,6 +669,7 @@ class MemoryGame {
         
         // Get high scores (async because it fetches from Firebase)
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.hub.container.innerHTML = `
             <div class="memory-game glass-effect">
@@ -937,6 +939,7 @@ class ReactionGame {
         
         // Get high scores (async because it fetches from Firebase)
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.hub.container.innerHTML = `
             <div class="reaction-game glass-effect">
@@ -1332,6 +1335,7 @@ class CodeQuiz {
         
         // Get high scores (async because it fetches from Firebase)
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.hub.container.innerHTML = `
             <div class="quiz-game glass-effect">
@@ -1595,6 +1599,7 @@ class TerminalHacker {
         // Make scoreManager globally accessible for leaderboard button
         window.currentScoreManager = this.scoreManager;
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
 
         this.hub.container.innerHTML = `
             <div class="terminal-game glass-effect">
@@ -2036,6 +2041,7 @@ class SQLDetective {
     async start() {
         window.currentScoreManager = this.scoreManager;
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
 
         this.hub.container.innerHTML = `
             <div class="terminal-game glass-effect">
@@ -2472,6 +2478,7 @@ class BinaryConverter {
         
         // Get high scores (async because it fetches from Firebase)
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.score = 0;
         this.streak = 0;
@@ -2841,6 +2848,7 @@ class CSSBattle {
         // Make scoreManager globally accessible for leaderboard button
         window.currentScoreManager = this.scoreManager;
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
 
         this.hub.container.innerHTML = `
             <div class="css-battle-game glass-effect">
@@ -3243,6 +3251,7 @@ class RegexGolf {
         
         // Get high scores (async because it fetches from Firebase)
         this.highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.score = 0;
         this.currentHole = 0;
@@ -3612,6 +3621,7 @@ class Minesweeper {
         
         // Get high scores (async because it fetches from Firebase)
         this.highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.grid = [];
         this.revealedCount = 0;
@@ -4024,6 +4034,7 @@ class PathFinder {
         
         // Get high scores (async because it fetches from Firebase)
         this.highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.grid = [];
         this.startCell = { x: 5, y: 10 };
@@ -4195,9 +4206,12 @@ class PathFinder {
             }
         }
         
-        document.addEventListener('mouseup', () => {
-            this.isDrawing = false;
-        });
+        // initializeGrid re-runs on every wall toggle — the document listener
+        // must be added exactly once and removed in cleanup().
+        if (!this._boundStopDrawing) {
+            this._boundStopDrawing = () => { this.isDrawing = false; };
+            document.addEventListener('mouseup', this._boundStopDrawing);
+        }
     }
     
     handleCellClick(x, y) {
@@ -4534,6 +4548,10 @@ class PathFinder {
     
     cleanup() {
         this.isRunning = false;
+        if (this._boundStopDrawing) {
+            document.removeEventListener('mouseup', this._boundStopDrawing);
+            this._boundStopDrawing = null;
+        }
     }
 }
 

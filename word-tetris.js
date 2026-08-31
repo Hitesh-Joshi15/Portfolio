@@ -42,7 +42,9 @@ class WordTetris {
             'K': 2, 'V': 2, 'X': 1, 'Z': 1, 'J': 1, 'Q': 1
         };
         
-        // Tetromino shapes (smaller pieces) + domino + single block
+        // Tetromino shapes (smaller pieces) + domino. Single blocks are NOT in
+        // the normal rotation — they only appear as gold helper pieces or as
+        // stack-pressure relief once the board is over half full (_pickShape).
         this.shapes = [
             [[1, 1], [1, 1]], // O
             [[1, 1, 1]], // I
@@ -52,7 +54,6 @@ class WordTetris {
             [[1, 1, 1], [1, 0, 0]], // L
             [[1, 1, 1], [0, 0, 1]], // J
             [[1, 1]], // Domino (2 blocks)
-            [[1]], // Single block
         ];
         
         // Common letter patterns that appear together in English words
@@ -63,11 +64,13 @@ class WordTetris {
             'CAT', 'BAT', 'RAT', 'HAT', 'MAT', 'SAT', 'FAT', 'PAT'
         ];
         
-        // Common English words (3-6 letters) for smart piece generation
+        // Common English words (3-6 letters). Doubles as the OFFLINE dictionary
+        // (validateWord checks here first — the dictionary API is blocked on many
+        // corporate/school networks), so breadth matters more than curation.
         this.wordBank = [
             // 3 letter words
             'THE', 'AND', 'FOR', 'ARE', 'BUT', 'NOT', 'YOU', 'ALL', 'CAN', 'HER', 'WAS', 'ONE', 'OUR', 'OUT', 'DAY',
-            'CAT', 'DOG', 'BAT', 'RAT', 'HAT', 'MAT', 'SAT', 'CAR', 'BAR', 'TAR', 'ART', 
+            'CAT', 'DOG', 'BAT', 'RAT', 'HAT', 'MAT', 'SAT', 'CAR', 'BAR', 'TAR', 'ART',
             'EAR', 'EAT', 'TEA', 'SEA', 'PEA', 'BEE', 'SEE', 'TEN', 'PEN', 'MEN', 'HEN',
             'BIG', 'DIG', 'FIG', 'PIG', 'WIG', 'BIN', 'TIN', 'WIN', 'PIN', 'SIN', 'FIN',
             'HOT', 'POT', 'COT', 'DOT', 'GOT', 'LOT', 'TOP', 'POP', 'MOP', 'HOP',
@@ -75,6 +78,24 @@ class WordTetris {
             'CUP', 'PUP', 'CUT', 'GUT', 'HUT', 'NUT', 'PUT', 'BUS', 'RUG', 'BUG',
             'BAD', 'DAD', 'HAD', 'MAD', 'PAD', 'SAD', 'BED', 'FED', 'LED', 'RED', 'WED',
             'AGE', 'ACE', 'ATE', 'AWE', 'AXE', 'BAG', 'BET', 'BOW', 'BOX', 'BOY',
+            'TOY', 'JOY', 'SOY', 'COW', 'HOW', 'NOW', 'ROW', 'LOW', 'WOW', 'OWL', 'OWN',
+            'TWO', 'TOO', 'TOE', 'TOW', 'TIE', 'DIE', 'LIE', 'PIE', 'OIL', 'ICE', 'APE',
+            'ANT', 'ARM', 'AIR', 'ASK', 'BAY', 'BIT', 'BUY', 'CRY', 'DRY', 'FLY', 'FRY',
+            'TRY', 'SKY', 'SHY', 'SLY', 'SPY', 'EGG', 'END', 'EYE', 'FAR', 'FEW', 'FOX',
+            'FUN', 'GAS', 'GEM', 'GYM', 'INK', 'IVY', 'JAM', 'JAR', 'JET', 'JOB', 'JOG',
+            'KEY', 'KID', 'KIT', 'LAB', 'LAD', 'LAP', 'LAW', 'LAY', 'LEG', 'LET', 'LID',
+            'LIP', 'LOG', 'MAP', 'MIX', 'MOB', 'MOM', 'MOW', 'MUD', 'MUG', 'NAP', 'NET',
+            'NEW', 'NOD', 'OAK', 'OAR', 'OAT', 'ODD', 'OFF', 'OLD', 'ORB', 'ORE', 'OWE',
+            'PAL', 'PAR', 'PAT', 'PAW', 'PAY', 'PEG', 'PET', 'PIT', 'POD', 'PRO', 'PUB',
+            'RAG', 'RAM', 'RAP', 'RAW', 'RAY', 'RIB', 'RIM', 'RIP', 'ROB', 'ROD', 'ROT',
+            'RYE', 'SAP', 'SAW', 'SAY', 'SET', 'SHE', 'SIP', 'SIR', 'SIT', 'SIX', 'SKI',
+            'SOB', 'SON', 'SOW', 'SPA', 'SUB', 'SUM', 'TAB', 'TAD', 'TAG', 'TAP', 'TAX',
+            'TIP', 'TON', 'TUB', 'TUG', 'URN', 'USE', 'VAT', 'VET', 'VOW', 'WAG', 'WAR',
+            'WAX', 'WAY', 'WEB', 'WET', 'WHO', 'WHY', 'WIT', 'WOK', 'WON', 'YAK', 'YAM',
+            'YES', 'YET', 'ZAP', 'ZIP', 'ZOO', 'DEN', 'DEW', 'DIM', 'DIP', 'DUE', 'DUG',
+            'ELF', 'ERA', 'FOE', 'FOG', 'GAP', 'GEL', 'HUG', 'HUM', 'ICY', 'JAW', 'KIN',
+            'COB', 'COD', 'COG', 'CON', 'COP', 'CUB', 'CUE', 'DAM', 'HIP', 'HIT', 'HIS',
+            'HIM', 'HAS', 'GET', 'FIT', 'FIX', 'GUM', 'GUN', 'GUY', 'HAY',
             // 4 letter words
             'CARD', 'CARE', 'CART', 'CAST', 'STAR', 'TART', 'PART', 'PARK', 'DARK', 'MARK',
             'BEAT', 'BEAR', 'BEAN', 'TEAM', 'TEAR', 'READ', 'REAL', 'DEAR', 'MEAT', 'MEAN',
@@ -86,6 +107,48 @@ class WordTetris {
             'GAME', 'GATE', 'GAVE', 'BASE', 'CASE', 'RACE', 'FACE', 'PACE', 'LACE', 'WARE',
             'BIRD', 'WORD', 'BEST', 'WEST', 'REST', 'TEST', 'NEST', 'ROCK', 'SOCK', 'LOCK',
             'KING', 'RING', 'SING', 'WING', 'PINK', 'SINK', 'LINK', 'WINK', 'POND', 'BOND',
+            'BALL', 'BOOK', 'BOOT', 'BOTH', 'BOWL', 'CAKE', 'CALL', 'CALM', 'CAMP', 'CASH',
+            'CAVE', 'CHAT', 'CHIP', 'CITY', 'CLAP', 'CLAY', 'CLIP', 'CLUB', 'CLUE', 'COAL',
+            'CODE', 'COIN', 'COOK', 'COOL', 'COPY', 'CORE', 'CORN', 'COST', 'CREW', 'CROP',
+            'DATE', 'DAWN', 'DEAL', 'DECK', 'DEEP', 'DEER', 'DESK', 'DICE', 'DIRT', 'DISH',
+            'DOCK', 'DOLL', 'DOOR', 'DOWN', 'DRAW', 'DROP', 'DRUM', 'DUCK', 'DUST', 'EACH',
+            'EARN', 'EAST', 'EASY', 'EDGE', 'EXIT', 'FACT', 'FAIR', 'FALL', 'FARM', 'FAST',
+            'FEAR', 'FEEL', 'FEET', 'FELL', 'FELT', 'FILE', 'FILL', 'FILM', 'FIND', 'FIRE',
+            'FISH', 'FIST', 'FIVE', 'FLAG', 'FLAT', 'FLIP', 'FLOW', 'FOAM', 'FOLD', 'FOOD',
+            'FOOT', 'FORK', 'FORM', 'FORT', 'FOUR', 'FREE', 'FROG', 'FROM', 'FUEL', 'FULL',
+            'GIFT', 'GIRL', 'GIVE', 'GLAD', 'GLOW', 'GLUE', 'GOAL', 'GOLD', 'GOLF', 'GOOD',
+            'GRAB', 'GRAY', 'GRID', 'GRIN', 'GRIP', 'GROW', 'HAIR', 'HALF', 'HALL', 'HANG',
+            'HARD', 'HARM', 'HAWK', 'HEAL', 'HEAR', 'HEAT', 'HEEL', 'HELD', 'HELP', 'HERE',
+            'HERO', 'HIDE', 'HIGH', 'HILL', 'HINT', 'HOLD', 'HOLE', 'HOME', 'HOOK', 'HOPE',
+            'HORN', 'HOUR', 'HUGE', 'HUNT', 'HURT', 'ICON', 'IDEA', 'INCH', 'IRON', 'ITEM',
+            'JOKE', 'JUMP', 'JUST', 'KEEP', 'KEPT', 'KICK', 'KIND', 'KISS', 'KNEE', 'KNEW',
+            'KNOW', 'LAKE', 'LAMB', 'LAMP', 'LAST', 'LATE', 'LAWN', 'LAZY', 'LEAF', 'LEAN',
+            'LEAP', 'LEFT', 'LEND', 'LENS', 'LESS', 'LIFE', 'LIFT', 'LIKE', 'LIME', 'LION',
+            'LIST', 'LIVE', 'LONG', 'LOOK', 'LOOP', 'LOSE', 'LOST', 'LOUD', 'LOVE', 'LUCK',
+            'MAIL', 'MAIN', 'MAKE', 'MALL', 'MANY', 'MASK', 'MATH', 'MAZE', 'MEAL', 'MEET',
+            'MELT', 'MENU', 'MESS', 'MILD', 'MILE', 'MILK', 'MIND', 'MINT', 'MISS', 'MIST',
+            'MOOD', 'MOON', 'MORE', 'MOST', 'MOTH', 'MOVE', 'MUCH', 'MUST', 'NAIL', 'NAME',
+            'NAVY', 'NEAR', 'NEAT', 'NECK', 'NEWS', 'NEXT', 'NICE', 'NINE', 'NOON', 'NOSE',
+            'NOTE', 'ONCE', 'ONLY', 'OPEN', 'OVAL', 'OVEN', 'OVER', 'PAGE', 'PAID', 'PAIN',
+            'PAIR', 'PALE', 'PALM', 'PASS', 'PAST', 'PATH', 'PEAK', 'PEAR', 'PICK', 'PILE',
+            'PLAN', 'PLAY', 'PLOT', 'PLUG', 'PLUS', 'POEM', 'POET', 'POLE', 'POOL', 'POOR',
+            'PORT', 'POST', 'POUR', 'PULL', 'PUMP', 'PUSH', 'QUIT', 'QUIZ', 'RAIL', 'RAIN',
+            'RANK', 'RARE', 'RATE', 'RICE', 'RICH', 'RIDE', 'RIPE', 'RISE', 'RISK', 'ROAR',
+            'ROLE', 'ROLL', 'ROOF', 'ROOM', 'ROOT', 'ROPE', 'ROSE', 'RULE', 'RUSH', 'RUST',
+            'SAFE', 'SAID', 'SAIL', 'SALE', 'SALT', 'SAME', 'SAVE', 'SEAL', 'SEAT', 'SEEK',
+            'SEEM', 'SEEN', 'SELF', 'SELL', 'SEND', 'SENT', 'SHIP', 'SHOE', 'SHOP', 'SHOT',
+            'SHOW', 'SHUT', 'SICK', 'SIDE', 'SIGN', 'SILK', 'SIZE', 'SKIN', 'SKIP', 'SLIP',
+            'SLOW', 'SNAP', 'SNOW', 'SOAP', 'SOFT', 'SOIL', 'SOLD', 'SOME', 'SONG', 'SOON',
+            'SORT', 'SOUL', 'SOUP', 'SPIN', 'SPOT', 'STAY', 'STEM', 'STEP', 'STIR', 'STOP',
+            'SUIT', 'SWIM', 'TAIL', 'TAKE', 'TALE', 'TALK', 'TALL', 'TANK', 'TAPE', 'TASK',
+            'TAXI', 'TELL', 'TENT', 'TERM', 'TEXT', 'THAN', 'THAT', 'THEM', 'THEN', 'THEY',
+            'THIS', 'TIDE', 'TIDY', 'TILE', 'TINY', 'TIRE', 'TONE', 'TOOK', 'TOOL', 'TORN',
+            'TOUR', 'TOWN', 'TRAP', 'TREE', 'TRIM', 'TRIP', 'TRUE', 'TUNE', 'TWIN', 'TYPE',
+            'UNIT', 'UPON', 'USED', 'USER', 'VERY', 'VIEW', 'VOTE', 'WAIT', 'WAKE', 'WALK',
+            'WALL', 'WANT', 'WARM', 'WARN', 'WASH', 'WAVE', 'WEAK', 'WEAR', 'WEEK', 'WELL',
+            'WENT', 'WERE', 'WHAT', 'WHEN', 'WIDE', 'WILD', 'WILL', 'WIND', 'WIRE', 'WISE',
+            'WISH', 'WITH', 'WOKE', 'WOLF', 'WOOD', 'WOOL', 'WORE', 'WORK', 'WORM', 'WORN',
+            'WRAP', 'YARD', 'YARN', 'YEAR', 'ZERO', 'ZONE',
             // 5 letter words
             'HEART', 'START', 'SMART', 'BEARD', 'BREAD', 'BREAK', 'GREAT', 'TREAT', 'STEAM',
             'LIGHT', 'RIGHT', 'NIGHT', 'FIGHT', 'SIGHT', 'TIGHT', 'BRING', 'STING', 'THING',
@@ -94,7 +157,17 @@ class WordTetris {
             'SCALE', 'SPACE', 'GRACE', 'TRACE', 'PLACE', 'TRADE', 'GRADE', 'SHADE', 'BLADE',
             'HOUSE', 'MOUSE', 'HORSE', 'NURSE', 'CURSE', 'PURSE', 'BURST', 'CRUST', 'TRUST',
             'WATER', 'LATER', 'PAPER', 'EARTH', 'NORTH', 'WORTH', 'BIRTH', 'THIRD', 'WORLD',
-            'DRINK', 'THINK', 'THANK', 'BLANK', 'PLANT', 'GRANT', 'FRONT', 'POINT', 'JOINT'
+            'DRINK', 'THINK', 'THANK', 'BLANK', 'PLANT', 'GRANT', 'FRONT', 'POINT', 'JOINT',
+            'ABOUT', 'AFTER', 'AGAIN', 'APPLE', 'BEACH', 'BLACK', 'BLOCK', 'BLOOD', 'BOARD',
+            'CHAIR', 'CHESS', 'CLEAN', 'CLEAR', 'CLIMB', 'CLOCK', 'CLOSE', 'CLOUD', 'COUNT',
+            'DANCE', 'DREAM', 'DRESS', 'DRIVE', 'EARLY', 'EIGHT', 'ENJOY', 'ENTER', 'EVERY',
+            'FIELD', 'FLOOR', 'FRESH', 'FRUIT', 'GLASS', 'GREEN', 'GROUP', 'HAPPY', 'HEAVY',
+            'LARGE', 'LAUGH', 'LEARN', 'LEVEL', 'LUCKY', 'MAGIC', 'MONEY', 'MONTH', 'MUSIC',
+            'OCEAN', 'PARTY', 'PEACE', 'PIANO', 'PIZZA', 'POWER', 'QUEEN', 'QUICK', 'QUIET',
+            'RADIO', 'RIVER', 'ROBOT', 'SEVEN', 'SHARE', 'SHARP', 'SHINE', 'SHIRT', 'SHORT',
+            'SMALL', 'SMILE', 'SPEAK', 'SPEED', 'SPEND', 'SPORT', 'STAGE', 'STAIR', 'STORE',
+            'STORM', 'STORY', 'STUDY', 'SUGAR', 'SWEET', 'TABLE', 'TEACH', 'TIGER', 'TODAY',
+            'TOUCH', 'TOWER', 'VOICE', 'WATCH', 'WHEEL', 'WHITE', 'WOMAN', 'WRITE', 'YOUNG'
         ];
         
         // Dictionary cache
@@ -119,6 +192,7 @@ class WordTetris {
         
         // Get high scores (async because it fetches from Firebase)
         const highScoreHTML = await this.scoreManager.getStartScreenHTML();
+        if (this.hub.currentGame !== this) return; // player left during the fetch
         
         this.hub.container.innerHTML = `
             <div class="word-tetris-game glass-effect">
@@ -786,9 +860,9 @@ class WordTetris {
             this.checkedWords.set(word, isValid);
             return isValid;
         } catch (error) {
-            // Fallback to basic word list
-            const commonWords = ['cat', 'dog', 'car', 'art', 'rat', 'bat', 'mat', 'hat', 'sat', 'cart', 'part', 'star', 'card', 'care', 'scar'];
-            return commonWords.includes(word);
+            // Network failed/blocked — the word bank above is the offline
+            // dictionary; don't cache this as invalid (network may recover).
+            return false;
         }
     }
     
