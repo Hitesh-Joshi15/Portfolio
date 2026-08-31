@@ -7954,6 +7954,44 @@ body.light-theme .tech-stats-summary .stat-label {
     }
 }
 
+/* Compact nav row on phones — full-size logo + three 40px controls + burger
+   overflow past the viewport edge (the burger became unreachable at 390px). */
+@media (max-width: 560px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .logo {
+        font-size: 1.15rem;
+    }
+
+    .nav-controls {
+        gap: 0.5rem;
+    }
+
+    .theme-toggle,
+    .cmd-btn,
+    .world-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .logo {
+        font-size: 1rem;
+    }
+
+    .theme-toggle,
+    .cmd-btn,
+    .world-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.78rem;
+    }
+}
+
 @media (max-width: 1024px) {
     .about-content,
     .skills-content,
